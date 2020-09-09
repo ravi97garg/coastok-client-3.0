@@ -62,19 +62,42 @@
     localStorage.removeItem('token');
     localStorage.removeItem('userProfile');
     if(!(window.location.href === `${window.location.origin}/pages/login/index.html` || window.location.href === window.location.origin)){
-      console.log(window.location.href, window.location.origin, window.location.href === `${window.location.origin}/pages/login/index.html`, window.location.href !== window.location.origin);
       window.location.href = window.location.origin + '/pages/login/index.html';
     }
   }
 
   $(document).ready(function() {
     const token = localStorage.getItem('token');
-    let userProfile = localStorage.getItem('userProfile');
+    // let userProfile = localStorage.getItem('userProfile');
     try{
-      if(token && userProfile){
-        userProfile = JSON.parse(userProfile);
-        $('#profileDropdown > img').attr("src",userProfile.imageUrl || "../../assets/images/avatar-person.svg");
-        $('#profileDropdown > span').text(userProfile.name || "Anonymous");
+      if(token){
+        $.ajax({
+          type: "GET",
+          url: `http://3.6.160.77:8080/api/v1/verifyToken`,
+          dataType: 'json',
+          cors: true ,
+          contentType:'application/json',
+          secure: true,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+          beforeSend: function (xhr) {
+            xhr.setRequestHeader ("access_token", localStorage.getItem('token'));
+          },
+          success: function(response)
+          {
+            if(response.data && response.data.length){
+              const userProfile = response.data[0];
+              // userProfile = JSON.parse(userProfile);
+              localStorage.setItem('username', userProfile.name);
+              $('#profileDropdown > img').attr("src",userProfile.imageUrl || "../../assets/images/avatar-person.svg");
+              $('#profileDropdown > span').text(userProfile.name || "Anonymous");
+            }
+          },
+          error: function (err) {
+            alert(JSON.stringify(err));
+          },
+        });
       } else {
         logout();
       }

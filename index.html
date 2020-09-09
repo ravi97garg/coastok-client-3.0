@@ -32,8 +32,9 @@
                             </div>
 
                             <div class="header-btn text-right d-none d-sm-block ml-lg-4">
-                                <a href="pages/login/index.html" class="btn-circle btn-default btn">
-                                    Login</a>
+                                <a id="header-btn" href="pages/login" class="btn-circle btn-default btn">
+                                    Login
+                                </a>
                             </div>
 
                             <div class="mobile-navigation-icon d-block d-lg-none" id="mobile-menu-trigger">
@@ -63,6 +64,15 @@
 </div>
 
 </body>
+<script src="vendors/base/vendor.bundle.base.js"></script>
+<script>
+    $(document).ready(function (){
+      const isLogin = localStorage.getItem('token');
+      if(isLogin) {
+        $('#header-btn').attr("href", "pages/dashboard").text('Dashboard');
+      }
+    })
+</script>
 
 </html>
 

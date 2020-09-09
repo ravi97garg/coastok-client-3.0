@@ -80,9 +80,9 @@
       const token = localStorage.getItem('token');
       let userProfile = localStorage.getItem('userProfile');
       try{
-        if(token && userProfile){
-          userProfile = JSON.parse(userProfile);
-          window.location.href = window.location.origin + '/pages/dashboard/index.html';
+        if(token){
+          // userProfile = JSON.parse(userProfile);
+          window.location.href = window.location.origin + '/pages/dashboard';
         }
       } catch (err) {
         // do nothing
@@ -90,10 +90,9 @@
 
       $('#login-form').submit(function(e) {
         e.preventDefault();
-        console.log('abc', $('#login-form input[name="email"]').val());
         $.ajax({
           type: "POST",
-          url: 'http://148.72.212.41:3030/v1/users/admin-login',
+          url: 'http://3.6.160.77:8080/api/v1/login',
           dataType: 'json',
           cors: true ,
           contentType:'application/json',
@@ -110,11 +109,10 @@
           }),
           success: function(data)
           {
-            console.log(data);
-            if (data.statusCode === 200) {
-              localStorage.setItem('token', data.result.token);
-              localStorage.setItem('userProfile', JSON.stringify(data.result.data))
-              window.location.href = window.location.origin + '/pages/dashboard/index.html';
+            if (data.status === 1) {
+              localStorage.setItem('token', (data && data.result && data.result.token) || (data && data.data && data.data[0] && data.data[0].token));
+              localStorage.setItem('userProfile', JSON.stringify(data && data.result && data.result.data))
+              window.location.href = window.location.origin + '/pages/dashboard';
             }
             else {
               alert(data);
