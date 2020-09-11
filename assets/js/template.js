@@ -89,13 +89,18 @@
             if(response.data && response.data.length){
               const userProfile = response.data[0];
               // userProfile = JSON.parse(userProfile);
+              localStorage.setItem('userProfile', JSON.stringify(userProfile));
               localStorage.setItem('username', userProfile.name);
-              $('#profileDropdown > img').attr("src",userProfile.imageUrl || "../../assets/images/avatar-person.svg");
-              $('#profileDropdown > span').text(userProfile.name || "Anonymous");
+              if(userProfile.imageUrl){
+                $('#profileDropdown > img').attr("src", userProfile.imageUrl);
+              }
+              if(userProfile.name){
+                $('#profileDropdown > span').text(userProfile.name);
+              }
             }
           },
           error: function (err) {
-            alert(JSON.stringify(err));
+            logout();
           },
         });
       } else {

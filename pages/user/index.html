@@ -52,7 +52,7 @@
                 <li class="nav-item nav-profile dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                         <img src="../../assets/images/avatar-person.svg" alt="profile"/>
-                        <span class="nav-profile-name">Louis Barnett</span>
+                        <span class="nav-profile-name">Unknown</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                         <a class="dropdown-item">
@@ -83,17 +83,34 @@
                         <span class="menu-title">Dashboard</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../../pages/area">
-                        <i class="mdi mdi-image-area menu-icon"></i>
-                        <span class="menu-title">Area</span>
-                    </a>
-                </li>
+                <!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="../../pages/area">-->
+<!--                        <i class="mdi mdi-image-area menu-icon"></i>-->
+<!--                        <span class="menu-title">Area</span>-->
+<!--                    </a>-->
+<!--                </li>-->
                 <li class="nav-item">
                     <a class="nav-link" href="../../pages/answerQuestion">
                         <i class="mdi mdi-message-text menu-icon"></i>
                         <span class="menu-title">Answer Question</span>
                     </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false"
+                       aria-controls="user-actions">
+                        <i class="mdi mdi-circle-outline menu-icon"></i>
+                        <span class="menu-title">Manage User</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="user-actions">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" href="../../pages/user">My Area Members</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../../pages/user/pending">Pending Members</a>
+                            </li>
+<!--                            <li class="nav-item"><a class="nav-link" href="../../pages/user/update">Update Member-->
+<!--                                Details</a></li>-->
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </nav>
@@ -104,9 +121,12 @@
                     <div class="col-md-12 stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <p class="card-title">Questions</p>
+                                <p class="card-title">Members</p>
                                 <div>
-                                    <ul class="question-list"></ul>
+                                    <div class="table-responsive">
+                                        <table id="userTable" class="table table-striped">
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -115,31 +135,22 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalTitle" aria-hidden="true">
+        <div class="modal fade" id="memberModal" tabindex="-1" role="dialog" aria-labelledby="memberModalTitle"
+             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Question</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Member Details</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="question"></div>
-                        <textarea class="answer-text" placeholder="Your Answer here..."></textarea>
-                        <div id="controls">
-                            <button class="btn btn-outline-primary btn-fw" id="recordButton">Record</button>
-                            <button class="btn btn-outline-warning btn-fw" id="pauseButton">Pause</button>
-                            <button class="btn btn-outline-success btn-fw" id="stopButton">Stop</button>
-                        </div>
-                        <div id="recording-wrapper">
-                            <div class="recording"></div>
-                            <div class="recording-message"></div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
                     </div>
                 </div>
             </div>
@@ -166,11 +177,11 @@
 <script src="../../assets/js/jquery.dataTables.js"></script>
 <script src="../../assets/js/dataTables.bootstrap4.js"></script>
 <script src="../../assets/js/constants.js"></script>
-<script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
 <script src="./script.js"></script>
 <script>
   const state = {};
-  function getCategoryStr(category){
+
+  function getCategoryStr(category) {
     switch (category) {
       case 1:
         return "PERSONAL";
@@ -182,117 +193,111 @@
         return "OTHER";
     }
   }
-  $(document).ready(function() {
-    $.ajax({
-      type: "GET",
-      url: `${API_BASE_URL}/question`,
-      dataType: 'json',
-      cors: true ,
-      contentType:'application/json',
-      secure: true,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader ("access_token", localStorage.getItem('token'));
-      },
-      success: function(response)
-      {
-        if(response.status === 1) {
-          const questions = response.data && response.data.data;
-          const cList = $('ul.question-list')
-          $.each(questions, function(i)
-          {
-            var li = $('<li/>')
-              .addClass('question-item')
-              .appendTo(cList);
-            $('<span/>')
-              .addClass('question-category')
-              .text(getCategoryStr(questions[i].category))
-              .appendTo(li);
-            $('<p/>')
-              .addClass('question')
-              .text(questions[i].question)
-              .appendTo(li);
-            $('<div/>')
-              .addClass('question-details')
-              .text(`Asked to: ${questions[i].askName}`)
-              .appendTo(li);
-            $('<div/>')
-              .addClass('question-details')
-              .text(`Asked by: ${questions[i].askId.name}`)
-              .appendTo(li);
-            $('<div/>')
-              .addClass('question-details')
-              .text(`Asked on: ${questions[i].askDate}`)
-              .appendTo(li);
-            $('<button/>')
-              .addClass('btn btn-primary')
-              .click(function () {
-                delete window.ansFile;
-                state.questionId = questions[i]._id;
-                $('#questionModal .recording').empty();
-                $('#questionModal .recording-message').empty();
-                $('#questionModal .modal-body .question').text(questions[i].question);
-                $('#recordButton').show().click(function () {startRecording(questions[i]._id)});
-                $('#pauseButton').hide().click(pauseRecording);
-                $('#stopButton').hide().click(function() {
-                  stopRecording(questions[i]._id);
-                });
-              })
-              .attr('data-toggle', 'modal')
-              .attr('data-target', "#questionModal")
-              .text('Reply')
-              .appendTo(li);
-          });
-        }
 
-      },
-      error: function (err) {
-        alert(JSON.stringify(err));
-      },
-    });
-
-    $("#questionModal .modal-footer .btn-primary").click(function(e) {
-      const ansText = $.trim($("#questionModal textarea").val());
-      const ansFile = window.ansFile;
-      if(ansText || ansFile) {
-        state.payload = {};
-        if(ansText) {
-          state.payload.ansText = ansText;
-        }
-        if(ansFile) {
-          state.payload.ansAudio = ansFile;
-        }
-        state.payload.ansBy = localStorage.getItem('username') || 'Unknown';
+  $(document).ready(function () {
+    let userProfile;
+    let state = {};
+    try {
+      userProfile = JSON.parse(localStorage.getItem('userProfile'));
+      if (userProfile.userRole === 7) {
+        // if the logged in user is an Area leader
+        // 1. Fetch the logged in area leaders connected area
         $.ajax({
-          type: "PUT",
-          url: `http://3.6.160.77:8080/api/v1/question/${state.questionId}`,
-          cors: true ,
-          contentType: false,
-          processData: false,
+          type: "GET",
+          url: `${API_BASE_URL}/user?${$.param({
+            id: userProfile._id,
+          })}`,
+          dataType: 'json',
+          cors: true,
+          contentType: 'application/json',
           secure: true,
           headers: {
             'Access-Control-Allow-Origin': '*',
           },
           beforeSend: function (xhr) {
-            xhr.setRequestHeader ("access_token", localStorage.getItem('token'));
+            xhr.setRequestHeader("access_token", localStorage.getItem('token'));
           },
-          data: JSON.stringify(state.payload),
-          success: function(response)
-          {
-            console.log(JSON.stringify(response));
+          success: function (response) {
+            const area = response.data
+              && response.data.data
+              && response.data.data[0]
+              && response.data.data[0].connectedArea;
+            if (area) {
+              $.ajax({
+                type: "GET",
+                url: `${API_BASE_URL}/user?${$.param({
+                  connectedArea: area,
+                  per_page: 1000,
+                })}`,
+                dataType: 'json',
+                cors: true,
+                contentType: 'application/json',
+                secure: true,
+                headers: {
+                  'Access-Control-Allow-Origin': '*',
+                },
+                beforeSend: function (xhr) {
+                  xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                },
+                success: function (response) {
+                  state.areaMembers = response.data.data;
+                  const userTable = $('#userTable');
+                  const tableBody = $('<tbody>');
+                  if (state.areaMembers.length) {
+                    userTable
+                      .append($('<thead><tr><td>Name</td><td>Email</td><td>Role</td><td>Actions</td></tr></thead>'))
+                    $.each(state.areaMembers, function (i, item) {
+                      var detailsBtn = $('<button>')
+                        .text("View Details")
+                        .attr('data-toggle', 'modal')
+                        .attr('data-target', "#memberModal")
+                        .addClass('btn btn-primary')
+                        .click(function () {
+                          $('#memberModal .modal-body').empty();
+                          $.each(item, function (key, value) {
+                            $('#memberModal .modal-body')
+                              .append(
+                                $('<div>' + key.toUpperCase() + ' : ' + value + '</div>')
+                              );
+                          });
+                        });
+                      var $tr = $('<tr>').append(
+                        $('<td>').text(item.name),
+                        $('<td>').text(item.email),
+                        $('<td>').text(USER_ROLE[item.userRole]),
+                        $('<td>').append(detailsBtn)
+                      ); //.appendTo('#records_table');
+                      tableBody.append($tr);
+                    });
+                    userTable.append(tableBody);
+                    userTable.DataTable({
+                      "aLengthMenu": [
+                        [5, 10, 15, -1],
+                        [5, 10, 15, "All"]
+                      ],
+                      "iDisplayLength": 10,
+                      "language": {
+                        search: ""
+                      }
+                    });
+                  } else {
+
+                  }
+                },
+                error: function (err) {
+                  alert(JSON.stringify(err));
+                },
+              });
+            }
           },
           error: function (err) {
             alert(JSON.stringify(err));
           },
         });
-        $('#questionModal').modal('toggle');
-      } else {
-        e.preventDefault();
-        $('#recording-wrapper .recording-message').empty().text('Either Add Answer Text or Record & Upload Answer Audio');
       }
-    })
+    } catch (e) {
+      logout();
+    }
   });
 </script>
 </html>
