@@ -1,10 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Coastok Admin Panel</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../../vendors/base/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../../assets/css/style.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
 </head>
+
 <body>
-UPDATE
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="navbar-brand-wrapper d-flex justify-content-center">
+                <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                    <a class="navbar-brand brand-logo" href="index.html"><img src="../../../assets/images/logo.png" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../../../assets/images/logo-mini.png" alt="logo" /></a>
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-sort-variant"></span>
+          </button>
+                </div>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                <ul class="navbar-nav mr-lg-4 w-100">
+                    <li class="nav-item nav-search d-none d-lg-block w-100">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="search">
+                  <i class="mdi mdi-magnify"></i>
+                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item nav-profile dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                            <img src="../../../assets/images/avatar-person.svg" alt="profile" />
+                            <span class="nav-profile-name">Unknown</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                            <a class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i> Settings
+                            </a>
+                            <a class="dropdown-item" id="logoutBtn">
+                                <i class="mdi mdi-logout text-primary"></i> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../../pages/dashboard">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../../pages/area">
+                            <i class="mdi mdi-image-area menu-icon"></i>
+                            <span class="menu-title">Area</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../../pages/answerQuestion">
+                            <i class="mdi mdi-message-text menu-icon"></i>
+                            <span class="menu-title">Answer Question</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false" aria-controls="user-actions">
+                            <i class="mdi mdi-account-settings menu-icon"></i>
+                            <span class="menu-title">Manage User</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="user-actions">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/user">View Members</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/pending">Pending
+                    Members</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/update">Update Member Details</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#content-actions" aria-expanded="false" aria-controls="content-actions">
+                            <i class="mdi mdi-arrow-up-bold-hexagon-outline menu-icon"></i>
+                            <span class="menu-title">Manage Static Content</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="content-actions">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/publish/audio.html">Audio</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/publish/video.html">Video</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/publish/images.html">Images</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-md-12 stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-title">Members</p>
+                                    <div>
+                                        <div class="table-responsive">
+                                            <table id="userTable" class="table table-striped">
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="viewMemberModal" tabindex="-1" role="dialog" aria-labelledby="viewMemberModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Member Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="updateUserModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Area Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input name="name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input name="email" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input name="phone" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="userRole">User Role</label>
+                                <input name="userRole" class="form-control"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="area">Area</label>
+                                <input name="area" class="form-control"></input>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="../../../assets/js/constants.js"></script>
+<!-- plugins:js -->
+<script src="../../../vendors/base/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page-->
+<!-- <script src="../../../vendors/chart.js/Chart.min.js"></script> -->
+<script src="../../../vendors/datatables.net/jquery.dataTables.js"></script>
+<script src="../../../vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<!-- End plugin js for this page-->
+<!-- inject:js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="../../../assets/js/off-canvas.js"></script>
+<script src="../../../assets/js/hoverable-collapse.js"></script>
+<script src="../../../assets/js/template.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="../../../assets/js/dashboard.js"></script>
+<!-- <script src="../../../assets/js/data-table.js"></script>
+<script src="../../../assets/js/jquery.dataTables.js"></script>
+<script src="../../../assets/js/dataTables.bootstrap4.js"></script> -->
+<script>
+    const state = {};
+    const updateUserState = {};
+
+    function getCategoryStr(category) {
+        switch (category) {
+            case 1:
+                return "PERSONAL";
+            case 2:
+                return "PREACHING";
+            case 3:
+                return "OTHER";
+            default:
+                return "OTHER";
+        }
+    }
+
+    function popuateData(data, viewDetails, updateUsers) {
+        if (data) {
+            const facilitators = data.filter(function(user) {
+                return user.userRole === 3; // facilitator
+            });
+            // const nonCoastok = data.filter(function (user) {
+            //   return user.userRole === 0; // non coastok member
+            // });
+            // const areaMembers = nonCoastok.filter(function (mem) {
+            //   return mem.chantingRounds >= 4 // those who are doing good
+            // });
+            const userTable = $('#userTable');
+            const tableBody = $('<tbody>');
+            console.log(data);
+            if (data.length) {
+                userTable
+                    .append($('<thead><tr><td>Name</td><td>Email</td><td>Role</td><td>Actions</td></tr></thead>'));
+
+                $.each(data, function(i, item) {
+                    if (viewDetails) {
+                        var detailsBtn = $('<button>')
+                            .append('<i class="mdi mdi-eye"></i>')
+                            .attr('data-toggle', 'modal')
+                            .attr('data-target', "#viewMemberModal")
+                            .attr('title', "View Details")
+                            .addClass('btn btn-primary')
+                            .click(function() {
+                                $('#viewMemberModal .modal-body').empty();
+                                $.each(item, function(key, value) {
+                                    $('#viewMemberModal .modal-body')
+                                        .append(
+                                            $('<div>' + key.toUpperCase() + ' : ' + (typeof value === 'object' ? JSON.stringify(value) : value) + '</div>')
+                                            .addClass('text-ellipsis')
+                                        );
+                                });
+                            });
+                    }
+                    var updateBtn = $('<span>');
+                    if (updateUsers) {
+                        var updateBtn = $('<button>')
+                            .append('<i class="mdi mdi-lead-pencil"></i>')
+                            .attr('data-toggle', 'modal')
+                            .attr('data-target', "#updateUserModal")
+                            .attr('title', "Edit Area Details")
+                            .addClass('btn btn-primary')
+                            .css("margin-left", "16px")
+                            .click(function() {
+                                updateUserState.userRole = null;
+                                updateUserState.area = null;
+                                updateUserState.currentUserId = item._id;
+                                $('#updateUserModal .modal-body input[name="name"]')
+                                    .val(item.name);
+                                $('#updateUserModal .modal-body input[name="email"]')
+                                    .val(item.email);
+                                $('#updateUserModal .modal-body input[name="phone"]')
+                                    .val(item.phone);
+                                $('#updateUserModal .modal-body input[name="userRole"]')
+                                    .autocomplete({
+                                        minLength: 2,
+                                        source: function(request, response) {
+                                            console.log('<<<<<<', request.term);
+                                            response($.map(USER_ROLE, function(obj, key) {
+
+                                                if (obj.toUpperCase().indexOf(request.term.toUpperCase()) != -1) {
+                                                    return {
+                                                        label: obj, // Label for Display
+                                                        value: key // Value
+                                                    }
+                                                } else {
+                                                    return null;
+                                                }
+                                            }));
+                                        },
+                                        focus: function(event, ui) {
+                                            event.preventDefault();
+                                        },
+                                        // Once a value in the drop down list is selected, do the following:
+                                        select: function(event, ui) {
+                                            event.preventDefault();
+                                            // place the person.given_name value into the textfield called 'select_origin'...
+                                            $('#updateUserModal .modal-body input[name="userRole"]').val(ui.item.label);
+                                            // ... any other tasks (like setting Hidden Fields) go here...
+                                            updateUserState.userRole = ui.item.value;
+                                        },
+                                        change: function(event, ui) {
+                                            if (ui.item == null || ui.item == undefined) {
+                                                $('#updateUserModal .modal-body input[name="userRole"]')
+                                                    .val("");
+                                            }
+                                        }
+                                    }).val(USER_ROLE[item.userRole]);
+                                $('#updateUserModal .modal-body input[name="area"]')
+                                    .autocomplete({
+                                        minLength: 2,
+                                        source: function(request, response) {
+                                            console.log('>>>', request.term);
+                                            $.ajax({
+                                                url: `${API_BASE_URL}/api/v1/area?per_page=100`,
+                                                method: 'GET',
+                                                dataType: 'json',
+                                                cors: true,
+                                                contentType: 'application/json',
+                                                secure: true,
+                                                headers: {
+                                                    'Access-Control-Allow-Origin': '*',
+                                                },
+                                                beforeSend: function(xhr) {
+                                                    xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                                                },
+                                                success: function(data) {
+                                                    response($.map(data.data.data, function(obj, key) {
+
+                                                        var areaName = obj.name.toUpperCase();
+
+                                                        if (areaName.indexOf(request.term.toUpperCase()) != -1) {
+                                                            return {
+                                                                label: obj.name, // Label for Display
+                                                                value: obj._id // Value
+                                                            }
+                                                        } else {
+                                                            return null;
+                                                        }
+                                                    }));
+                                                }
+                                            });
+                                        },
+                                        focus: function(event, ui) {
+                                            event.preventDefault();
+                                        },
+                                        // Once a value in the drop down list is selected, do the following:
+                                        select: function(event, ui) {
+                                            event.preventDefault();
+                                            // place the person.given_name value into the textfield called 'select_origin'...
+                                            $('#updateUserModal .modal-body input[name="area"]').val(ui.item.label);
+                                            // ... any other tasks (like setting Hidden Fields) go here...
+                                            updateUserState.area = ui.item.value;
+                                        },
+                                        change: function(event, ui) {
+                                            if (ui.item == null || ui.item == undefined) {
+                                                $('#updateUserModal .modal-body input[name="area"]')
+                                                    .val("");
+                                            }
+                                        }
+                                    }).val(item.connectedArea);
+                            });
+                    }
+                    var $tr = $('<tr>').append(
+                        $('<td>').text(item.name),
+                        $('<td>').text(item.email),
+                        $('<td>').text(USER_ROLE[item.userRole]),
+                        $('<td>').append(detailsBtn).append(updateBtn)
+                    ); //.appendTo('#records_table');
+                    tableBody.append($tr);
+                });
+                userTable.append(tableBody);
+                userTable.DataTable({
+                    "aLengthMenu": [
+                        [5, 10, 15, -1],
+                        [5, 10, 15, "All"]
+                    ],
+                    "iDisplayLength": 10,
+                    "language": {
+                        search: ""
+                    }
+                });
+            } else {
+                $('#userTable').replaceWith($('<div>').text('No Pending Approval Requests'));
+            }
+        }
+    }
+
+    $(document).ready(function() {
+        let userProfile;
+        let state = {};
+        try {
+            userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            if (userProfile.userRole === 4) {
+                // if the logged in user is an Area leader or General Secretary
+                // 1. Fetch the logged in area leader's connected area
+                $.ajax({
+                    type: "GET",
+                    url: `${API_BASE_URL}/user?${$.param({
+            id: userProfile._id,
+          })}`,
+                    dataType: 'json',
+                    cors: true,
+                    contentType: 'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                    },
+                    success: function(response) {
+                        const area = response.data &&
+                            response.data.data &&
+                            response.data.data[0] &&
+                            response.data.data[0].connectedArea;
+                        if (area) {
+                            $.ajax({
+                                type: "GET",
+                                url: `${API_BASE_URL}/user?${$.param({
+                  connectedAreaId: area,
+                  per_page: 1000
+                })}`,
+                                dataType: 'json',
+                                cors: true,
+                                contentType: 'application/json',
+                                secure: true,
+                                headers: {
+                                    'Access-Control-Allow-Origin': '*',
+                                },
+                                beforeSend: function(xhr) {
+                                    xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                                },
+                                success: function(response) {
+                                    popuateData(response.data.data, true, true)
+                                },
+                                error: function(err) {
+                                    logout();
+                                },
+                            });
+                        }
+                    },
+                    error: function(err) {
+                        logout();
+                    },
+                });
+            } else if ([5, 6, 7].includes(userProfile.userRole)) {
+                // if the logged in user is general secretary
+                // fetch all the pending users
+                var apiUrl;
+                if (userProfile.userRole === 5) {
+                    apiUrl = `${API_BASE_URL}/user?${$.param({
+            assistantDirector: userProfile._id,
+            per_page: 1000
+          })}`
+                } else {
+                    apiUrl = `${API_BASE_URL}/user?${$.param({
+            per_page: 10000
+          })}`
+                }
+                $.ajax({
+                    type: "GET",
+                    url: apiUrl,
+                    dataType: 'json',
+                    cors: true,
+                    contentType: 'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                    },
+                    success: function(response) {
+                        if (userProfile.userRole === 5) {
+                            popuateData(response.data.data, true, false);
+                        } else if (userProfile.userRole === 6) {
+                            popuateData(response.data.data, true, true);
+                        } else {
+                            popuateData(response.data.data, true, false);
+                        }
+                    },
+                    error: function(err) {
+                        logout();
+                    },
+                });
+            } else {
+                $('#userTable').replaceWith($('<div>').text('No Pending Approval Requests'));
+            }
+
+            $("#updateUserModal .modal-footer .btn-primary").click(function(e) {
+                const name = $('#updateUserModal .modal-body input[name="name"]').val();
+                const email = $('#updateUserModal .modal-body input[name="email"]').val();
+                const phone = $('#updateUserModal .modal-body input[name="phone"]').val();
+
+                if (updateUserState.currentUserId) {
+                    const updatedUser = {};
+                    if (updateUserState.userRole) {
+                        updatedUser.userRole = updateUserState.userRole;
+                        updateUserState.userRole = null;
+                    }
+                    if (updateUserState.area) {
+                        updatedUser.connectedArea = updateUserState.area;
+                        updateUserState.area = null;
+                    }
+                    $.ajax({
+                        url: `${API_BASE_URL}/user/${updateUserState.currentUserId}`,
+                        method: 'PUT',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            name,
+                            email,
+                            phone,
+                            ...updatedUser
+                        }),
+                        cors: true,
+                        contentType: 'application/json',
+                        secure: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                        }
+                    })
+                }
+            });
+        } catch (e) {
+            logout();
+        }
+    });
+</script>
+
 </html>

@@ -23904,3 +23904,9 @@ input[type="checkbox"] {
 
 
 /*# sourceMappingURL=maps/style.css.map */
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -11,216 +11,510 @@
     <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="style.css" />
     <!-- endinject -->
-    <link rel="shortcut icon" href="../../assets/images/favicon.png"/>
+    <link rel="shortcut icon" href="../../assets/images/favicon.png" />
 </head>
+
 <body>
-<div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <div class="navbar-brand-wrapper d-flex justify-content-center">
-            <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-                <a class="navbar-brand brand-logo" href="index.html"><img src="../../assets/images/logo.png"
-                                                                          alt="logo"/></a>
-                <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../../assets/images/logo-mini.png"
-                                                                               alt="logo"/></a>
-                <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-                    <span class="mdi mdi-sort-variant"></span>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="navbar-brand-wrapper d-flex justify-content-center">
+                <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                    <a class="navbar-brand brand-logo" href="index.html"><img src="../../assets/images/logo.png" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../../assets/images/logo-mini.png" alt="logo" /></a>
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                        <span class="mdi mdi-sort-variant"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                <ul class="navbar-nav mr-lg-4 w-100">
+                    <li class="nav-item nav-search d-none d-lg-block w-100">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="search">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search now" aria-label="search" aria-describedby="search">
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+                    <li class="nav-item nav-profile dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                            <img src="../../assets/images/avatar-person.svg" alt="profile" />
+                            <span class="nav-profile-name">Unknown</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                            <a class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i> Settings
+                            </a>
+                            <a class="dropdown-item" id="logoutBtn">
+                                <i class="mdi mdi-logout text-primary"></i> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
                 </button>
             </div>
-        </div>
-        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-            <ul class="navbar-nav mr-lg-4 w-100">
-                <li class="nav-item nav-search d-none d-lg-block w-100">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                <span class="input-group-text" id="search">
-                  <i class="mdi mdi-magnify"></i>
-                </span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search now" aria-label="search"
-                               aria-describedby="search">
-                    </div>
-                </li>
-            </ul>
-            <ul class="navbar-nav navbar-nav-right">
-                <li class="nav-item nav-profile dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                        <img src="../../assets/images/avatar-person.svg" alt="profile"/>
-                        <span class="nav-profile-name">Unknown</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                        <a class="dropdown-item">
-                            <i class="mdi mdi-settings text-primary"></i>
-                            Settings
-                        </a>
-                        <a class="dropdown-item" id="logoutBtn">
-                            <i class="mdi mdi-logout text-primary"></i>
-                            Logout
-                        </a>
-                    </div>
-                </li>
-            </ul>
-            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-                    data-toggle="offcanvas">
-                <span class="mdi mdi-menu"></span>
-            </button>
-        </div>
-    </nav>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="../../pages/dashboard">
-                        <i class="mdi mdi-home menu-icon"></i>
-                        <span class="menu-title">Dashboard</span>
-                    </a>
-                </li>
-                <!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" href="../../pages/area">-->
-<!--                        <i class="mdi mdi-image-area menu-icon"></i>-->
-<!--                        <span class="menu-title">Area</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-                <li class="nav-item">
-                    <a class="nav-link" href="../../pages/answerQuestion">
-                        <i class="mdi mdi-message-text menu-icon"></i>
-                        <span class="menu-title">Answer Question</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false" aria-controls="user-actions">
-                        <i class="mdi mdi-circle-outline menu-icon"></i>
-                        <span class="menu-title">Manage User</span>
-                        <i class="menu-arrow"></i>
-                    </a>
-                    <div class="collapse" id="user-actions">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="../../pages/user">My Area Members</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="../../pages/user/pending">Pending Members</a></li>
-<!--                            <li class="nav-item"> <a class="nav-link" href="../../pages/user/update">Update Member Details</a></li>-->
-                        </ul>
-                    </div>
-                </li>
-            </ul>
         </nav>
         <!-- partial -->
-        <div class="main-panel">
-            <div class="content-wrapper">
-                <div class="row">
-                    <div class="col-md-12 stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-title">Area Data</p>
-                                <div class="table-responsive">
-                                    <table id="areaTable" class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>Area Name</th>
-                                            <th>Area Leader</th>
-                                            <th>Assistant Director</th>
-                                            <th>Connected Members</th>
-                                        </tr>
-                                        </thead>
-<!--                                        <tbody>-->
-<!--                                        <tr>-->
-<!--                                            <td>Jeremy Ortega</td>-->
-<!--                                            <td>Levelled up</td>-->
-<!--                                            <td>Catalinaborough</td>-->
-<!--                                            <td>$790</td>-->
-<!--                                            <td>06 Jan 2018</td>-->
-<!--                                            <td>$2274253</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Alvin Fisher</td>-->
-<!--                                            <td>Ui design completed</td>-->
-<!--                                            <td>East Mayra</td>-->
-<!--                                            <td>$23230</td>-->
-<!--                                            <td>18 Jul 2018</td>-->
-<!--                                            <td>$83127</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Emily Cunningham</td>-->
-<!--                                            <td>support</td>-->
-<!--                                            <td>Makennaton</td>-->
-<!--                                            <td>$939</td>-->
-<!--                                            <td>16 Jul 2018</td>-->
-<!--                                            <td>$29177</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Minnie Farmer</td>-->
-<!--                                            <td>support</td>-->
-<!--                                            <td>Agustinaborough</td>-->
-<!--                                            <td>$30</td>-->
-<!--                                            <td>30 Apr 2018</td>-->
-<!--                                            <td>$44617</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Betty Hunt</td>-->
-<!--                                            <td>Ui design not completed</td>-->
-<!--                                            <td>Lake Sandrafort</td>-->
-<!--                                            <td>$571</td>-->
-<!--                                            <td>25 Jun 2018</td>-->
-<!--                                            <td>$78952</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Myrtie Lambert</td>-->
-<!--                                            <td>Ui design completed</td>-->
-<!--                                            <td>Cassinbury</td>-->
-<!--                                            <td>$36</td>-->
-<!--                                            <td>05 Nov 2018</td>-->
-<!--                                            <td>$36422</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Jacob Kennedy</td>-->
-<!--                                            <td>New project</td>-->
-<!--                                            <td>Cletaborough</td>-->
-<!--                                            <td>$314</td>-->
-<!--                                            <td>12 Jul 2018</td>-->
-<!--                                            <td>$34167</td>-->
-<!--                                        </tr>-->
-<!--                                        <tr>-->
-<!--                                            <td>Ernest Wade</td>-->
-<!--                                            <td>Levelled up</td>-->
-<!--                                            <td>West Fidelmouth</td>-->
-<!--                                            <td>$484</td>-->
-<!--                                            <td>08 Sep 2018</td>-->
-<!--                                            <td>$50862</td>-->
-<!--                                        </tr>-->
-<!--                                        </tbody>-->
-                                    </table>
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/dashboard">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/area">
+                            <i class="mdi mdi-image-area menu-icon"></i>
+                            <span class="menu-title">Area</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/answerQuestion">
+                            <i class="mdi mdi-message-text menu-icon"></i>
+                            <span class="menu-title">Answer Question</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false" aria-controls="user-actions">
+                            <i class="mdi mdi-account-settings menu-icon"></i>
+                            <span class="menu-title">Manage User</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="user-actions">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" href="../../pages/user">View Members</a>
+                                </li>
+                                <li class="nav-item"> <a class="nav-link" href="../../pages/user/pending">Pending
+                                        Members</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="../../pages/user/update">Update Member
+                                        Details</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="collapse" href="#content-actions" aria-expanded="false" aria-controls="content-actions">
+                            <i class="mdi mdi-arrow-up-bold-hexagon-outline menu-icon"></i>
+                            <span class="menu-title">Manage Static Content</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="content-actions">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link" href="../../pages/publish/audio.html">Audio</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../../pages/publish/video.html">Video</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../../pages/publish/images.html">Images</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-md-12 stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="card-title">Area Data</p>
+                                    <div class="table-responsive">
+                                        <table id="areaTable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Area Name</th>
+                                                    <th>Area Leader</th>
+                                                    <th>Assistant Director</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="viewAreaModal" tabindex="-1" role="dialog" aria-labelledby="viewAreaModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Area Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            <!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="editAreaModal" tabindex="-1" role="dialog" aria-labelledby="editAreaModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Area Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="areaName">Area Name</label>
+                                <input name="areaName" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="areaLeader">Area Leader (Type Email)</label>
+                                <input name="areaLeader" class="form-control"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="asstDirector">Assistant Director (Type Email)</label>
+                                <input name="asstDirector" class="form-control"></input>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </body>
+<script src="../../assets/js/constants.js"></script>
 <!-- plugins:js -->
 <script src="../../vendors/base/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
-<script src="../../vendors/chart.js/Chart.min.js"></script>
+<!-- <script src="../../vendors/chart.js/Chart.min.js"></script> -->
 <script src="../../vendors/datatables.net/jquery.dataTables.js"></script>
 <script src="../../vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
 <!-- End plugin js for this page-->
 <!-- inject:js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="../../assets/js/off-canvas.js"></script>
 <script src="../../assets/js/hoverable-collapse.js"></script>
 <script src="../../assets/js/template.js"></script>
 <!-- endinject -->
 <!-- Custom js for this page-->
 <script src="../../assets/js/dashboard.js"></script>
-<script src="../../assets/js/data-table.js"></script>
+<!-- <script src="../../assets/js/data-table.js"></script>
 <script src="../../assets/js/jquery.dataTables.js"></script>
-<script src="../../assets/js/dataTables.bootstrap4.js"></script>
+<script src="../../assets/js/dataTables.bootstrap4.js"></script> -->
+<script>
+    const editAreaState = {};
+
+    function setAreaLeaderCandidates(areaId) {
+        $.ajax({
+            type: "GET",
+            url: `${API_BASE_URL}/user?${$.param({
+                connectedAreaId: areaId,
+                per_page: 1000
+                })}`,
+            dataType: 'json',
+            cors: true,
+            contentType: 'application/json',
+            secure: true,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+            },
+            success: function(response) {
+                editAreaState.areaLeaderCandidates = (response.data && response.data.data) || [];
+            },
+            error: function(err) {
+                alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+            },
+        });
+    }
+
+    function setAreaLeaderCandidates(areaId) {
+        $.ajax({
+            type: "GET",
+            url: `${API_BASE_URL}/user?${$.param({
+                connectedAreaId: areaId,
+                per_page: 1000
+                })}`,
+            dataType: 'json',
+            cors: true,
+            contentType: 'application/json',
+            secure: true,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+            },
+            success: function(response) {
+                editAreaState.areaLeaderCandidates = (response.data && response.data.data) || [];
+            },
+            error: function(err) {
+                alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+            },
+        });
+    }
+
+    function populateData(areas, viewDetails, updateDetails) {
+        const areaTable = $('#areaTable');
+        const tableBody = $('#areaTable tbody');
+        if (areas.length) {
+            $.each(areas, function(i, area) {
+                if (viewDetails) {
+                    var detailsBtn = $('<button>')
+                        .append('<i class="mdi mdi-eye"></i>')
+                        .attr('data-toggle', 'modal')
+                        .attr('data-target', "#viewAreaModal")
+                        .attr('title', "View Details")
+                        .addClass('btn btn-primary')
+                        .click(function() {
+                            $('#viewAreaModal .modal-body').empty();
+                            $.each(area, function(key, value) {
+                                $('#viewAreaModal .modal-body')
+                                    .append(
+                                        $('<div>' + key.toUpperCase() + ' : ' + (typeof value === 'object' ? JSON.stringify(value) : value) + '</div>')
+                                        .addClass('text-ellipsis')
+                                    );
+                            });
+                        });
+                }
+                var updateBtn = $('<span>');
+                if (updateDetails) {
+                    var updateBtn = $('<button>')
+                        .append('<i class="mdi mdi-lead-pencil"></i>')
+                        .attr('data-toggle', 'modal')
+                        .attr('data-target', "#editAreaModal")
+                        .attr('title', "Edit Area Details")
+                        .addClass('btn btn-primary')
+                        .css("margin-left", "16px")
+                        .click(function() {
+                            editAreaState.areaLeader = null,
+                                editAreaState.assistantDirector = null,
+                                editAreaState.currentAreaId = area._id;
+                            setAreaLeaderCandidates(area._id);
+                            // $('#editAreaModal .modal-body').empty();
+                            $('#editAreaModal .modal-body input[name="areaName"]')
+                                .val(area.name);
+                            $('#editAreaModal .modal-body input[name="areaLeader"]')
+                                .autocomplete({
+                                    minLength: 2,
+                                    source: function(request, response) {
+                                        response($.map(editAreaState.areaLeaderCandidates, function(obj, key) {
+
+                                            var name = obj.name.toUpperCase();
+                                            var email = obj.email.toString();
+
+                                            if (name.indexOf(request.term.toUpperCase()) != -1 || email.indexOf(request.term) != -1) {
+                                                return {
+                                                    label: obj.name, // Label for Display
+                                                    value: obj // Value
+                                                }
+                                            } else {
+                                                return null;
+                                            }
+                                        }));
+                                    },
+                                    focus: function(event, ui) {
+                                        event.preventDefault();
+                                    },
+                                    // Once a value in the drop down list is selected, do the following:
+                                    select: function(event, ui) {
+                                        event.preventDefault();
+                                        // place the person.given_name value into the textfield called 'select_origin'...
+                                        $('#editAreaModal .modal-body input[name="areaLeader"]').val(ui.item.label);
+                                        // ... any other tasks (like setting Hidden Fields) go here...
+                                        editAreaState.areaLeader = ui.item.value;
+                                    },
+                                    change: function(event, ui) {
+                                        if (ui.item == null || ui.item == undefined) {
+                                            $('#editAreaModal .modal-body input[name="areaLeader"]')
+                                                .val("");
+                                        }
+                                    }
+                                }).val(area.areaLeader && area.areaLeader.name);
+                            $('#editAreaModal .modal-body input[name="asstDirector"]')
+                                .autocomplete({
+                                    minLength: 2,
+                                    source: function(request, response) {
+                                        $.ajax({
+                                            url: `${API_BASE_URL}/user?email=${request.term}`,
+                                            method: 'GET',
+                                            dataType: 'json',
+                                            cors: true,
+                                            contentType: 'application/json',
+                                            secure: true,
+                                            headers: {
+                                                'Access-Control-Allow-Origin': '*',
+                                            },
+                                            beforeSend: function(xhr) {
+                                                xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                                            },
+                                            success: function(data) {
+                                                response($.map(data.data.data, function(obj, key) {
+
+                                                    var name = obj.name.toUpperCase();
+                                                    var email = obj.email.toString();
+
+                                                    if (name.indexOf(request.term.toUpperCase()) != -1 || email.indexOf(request.term) != -1) {
+                                                        return {
+                                                            label: obj.name, // Label for Display
+                                                            value: obj // Value
+                                                        }
+                                                    } else {
+                                                        return null;
+                                                    }
+                                                }));
+                                            }
+                                        });
+                                    },
+                                    focus: function(event, ui) {
+                                        event.preventDefault();
+                                    },
+                                    // Once a value in the drop down list is selected, do the following:
+                                    select: function(event, ui) {
+                                        event.preventDefault();
+                                        // place the person.given_name value into the textfield called 'select_origin'...
+                                        $('#editAreaModal .modal-body input[name="asstDirector"]').val(ui.item.label);
+                                        // ... any other tasks (like setting Hidden Fields) go here...
+                                        editAreaState.assistantDirector = ui.item.value;
+                                    },
+                                    change: function(event, ui) {
+                                        if (ui.item == null || ui.item == undefined) {
+                                            $('#editAreaModal .modal-body input[name="asstDirector"]')
+                                                .val("");
+                                        }
+                                    }
+                                }).val(area.assistantDirector && area.assistantDirector.name);
+                        });
+                }
+                var $tr = $('<tr>').append(
+                    $('<td>').text(area.name),
+                    $('<td>').text((area.areaLeader && area.areaLeader.name) || 'NA'),
+                    $('<td>').text((area.assistantDirector && area.assistantDirector.name) || 'NA'),
+                    $('<td>').append(detailsBtn).append(updateBtn)
+                ); //.appendTo('#records_table');
+                tableBody.append($tr);
+            });
+            areaTable.append(tableBody);
+            areaTable.DataTable({
+                "aLengthMenu": [
+                    [5, 10, 15, -1],
+                    [5, 10, 15, "All"]
+                ],
+                "iDisplayLength": 10,
+                "language": {
+                    search: ""
+                }
+            });
+        } else {
+            $('#areaTable').replaceWith($('<div>').text('No Pending Approval Requests'));
+        }
+    }
+
+    $(document).ready(function() {
+        try {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            const userRole = userProfile.userRole;
+            $.ajax({
+                type: "GET",
+                url: `${API_BASE_URL}/area?${$.param({
+                    per_page: 100
+                })}`,
+                dataType: 'json',
+                cors: true,
+                contentType: 'application/json',
+                secure: true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                },
+                success: function(response) {
+                    const areas = (response.data && response.data.data) || [];
+                    if (userProfile.userRole === 7) {
+                        populateData(areas, true, false);
+                    } else if (userProfile.userRole === 6) {
+                        populateData(areas, true, true);
+                    } else {
+                        /*waise toh ye page khulna hi nahin chahiye kyuki area leader
+                         aur facilitator is page ko ni dekh skte. */
+                        populateData(areas);
+                    }
+
+                },
+                error: function(err) {
+                    alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+                },
+            });
+
+            $("#editAreaModal .modal-footer .btn-primary").click(function(e) {
+                const areaName = $('#editAreaModal .modal-body input[name="areaName"]').val();
+                if (editAreaState.currentAreaId) {
+                    const updatedArea = {};
+                    if (editAreaState.areaLeader) {
+                        updatedArea.areaLeader = editAreaState.areaLeader._id;
+                        editAreaState.areaLeader = null;
+                    }
+                    if (editAreaState.assistantDirector) {
+                        updatedArea.assistantDirector = editAreaState.assistantDirector._id;
+                        editAreaState.assistantDirector = null;
+                    }
+                    $.ajax({
+                        url: `${API_BASE_URL}/area/${editAreaState.currentAreaId}`,
+                        method: 'PUT',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            name: areaName,
+                            ...updatedArea
+                        }),
+                        cors: true,
+                        contentType: 'application/json',
+                        secure: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                        }
+                    })
+                }
+            });
+
+        } catch (err) {
+            alert(err);
+            logout();
+        }
+    })
+</script>
+
+
 </html>
