@@ -151,7 +151,9 @@
                             <div class="question"></div>
                             <textarea class="answer-text" placeholder="Your Answer here..."></textarea>
                             <div id="controls">
-                                <button class="btn btn-outline-primary btn-fw" id="recordButton">Record</button>
+                                <button class="btn btn-outline-primary btn-fw" id="recordButton">Record</button> <span class="or">&nbsp;or&nbsp;</span>
+                                <button class="file-upload-browse btn btn-primary" id="uploadButton" type="button">Upload Answer File</button>
+                                <input style="display: none;" type="file" name="img[]" class="file-upload-default" accept="audio/*">
                                 <button class="btn btn-outline-warning btn-fw" id="pauseButton">Pause</button>
                                 <button class="btn btn-outline-success btn-fw" id="stopButton">Stop</button>
                             </div>
@@ -190,6 +192,7 @@
 <script src="../../assets/js/dataTables.bootstrap4.js"></script> -->
 <script src="../../assets/js/constants.js"></script>
 <script src="../../assets/js/recorder.js"></script>
+<script src="../../assets/js/file-upload.js"></script>
 <script src="./script.js"></script>
 <script>
     URL = window.URL || window.webkitURL;
@@ -201,6 +204,24 @@
     // shim for AudioContext when it's not avb.
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     var audioContext //audio context to help us record
+
+    function uploadSuccessCb(response) {
+        const downloadLink = response.data.path;
+        this.ansFile = downloadLink
+        $('#recordButton').hide();
+        $('#pauseButton').hide();
+        $('#stopButton').hide();
+        $('#uploadButton').hide();
+        $('#controls .or').hide();
+        var au = $('<audio/>')
+            .attr("controls", "true")
+            .attr("src", downloadLink);
+
+        var div = $('<div/>')
+            .append(au)
+            .addClass("recording")
+        $('#recording-wrapper .recording').replaceWith(div);
+    }
 
     function startRecording() {
         try {
@@ -221,6 +242,8 @@
             $("#recordButton").hide();
             $("#stopButton").show();
             $("#pauseButton").show();
+            $('#uploadButton').hide();
+            $('#controls .or').hide();
 
             /*
                 We're using the standard promise based getUserMedia()
@@ -433,6 +456,8 @@
                                 $('#recordButton').show().click(startRecording);
                                 $('#pauseButton').hide().click(pauseRecording);
                                 $('#stopButton').hide().click(stopRecording);
+                                $('#uploadButton').show();
+                                $('#controls .or').show();
                             })
                             .attr('data-toggle', 'modal')
                             .attr('data-target', "#questionModal")

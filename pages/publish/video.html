@@ -15,7 +15,6 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="../../../assets/css/style.css">
-    <link rel="stylesheet" href="style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
 </head>
@@ -127,10 +126,15 @@
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-md-12 stretch-card">
+                        <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <p class="card-title">Members</p>
+                                    <div class="row">
+                                        <div class="col-md-12 stretch-card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                            <span class="card-title" style="margin: 0;">Static Video Contents</span>
+                                            <button class="btn btn-success" id="addVideoContent" data-toggle="modal" data-target="#createVideoModal">Add Video</button>
+                                        </div>
+                                    </div>
                                     <div>
                                         <div class="table-responsive">
                                             <table id="videoContentTable" class="table table-striped">
@@ -179,7 +183,7 @@
                                 <input name="name" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label for="url">url</label>
+                                <label for="url">URL</label>
                                 <input name="url" class="form-control" />
                             </div>
                             <div class="form-group">
@@ -209,6 +213,51 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="createVideoModal" tabindex="-1" role="dialog" aria-labelledby="createVideoModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Video Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input name="name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <!-- <label>Video File upload</label>
+                                <input type="file" name="video" class="file-upload-default" accept="video/*" />
+                                <div class="input-group col-xs-12">
+                                    <input type="text" name="url" class="form-control file-upload-info" disabled placeholder="Upload Video">
+                                    <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                      </span>
+                                </div> -->
+                                <label for="url">Youtube URL / ID</label>
+                                <input name="url" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="festType">Fest Type</label>
+                                <select name="festType" class="form-control">
+                                    <option value="1">UDGAAR</option>
+                                    <option value="2">VIPLAVA</option>
+                                    <option value="3">TEMPLE_CONNECT</option>
+                                    <option value="4">VALUE_EDUCATION</option>
+                                    <option value="5">CAMP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -228,9 +277,10 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <script src="../../../assets/js/dashboard.js"></script>
-<!-- <script src="../../../assets/js/data-table.js"></script> -->
-<!-- <script src="../../../assets/js/jquery.dataTables.js"></script> -->
-<!-- <script src="../../../assets/js/dataTables.bootstrap4.js"></script> -->
+<script src="../../../assets/js/file-upload.js"></script>
+<!-- <script src="../../../assets/js/data-table.js"></script>
+<script src="../../../assets/js/jquery.dataTables.js"></script>
+<script src="../../../assets/js/dataTables.bootstrap4.js"></script> -->
 <script>
     const state = {};
     const updateVideoState = {};
@@ -248,11 +298,19 @@
         }
     }
 
+    function extractYoutubeID(url) {
+        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[7].length === 11) ? match[7] : url;
+    };
+
+    function uploadSuccessCb(response) {
+        const downloadLink = response.data.path;
+        $('#createVideoModal .modal-body input[name="url"]').val(downloadLink);
+    }
+
     function populateData(data, viewDetails, updateVideos) {
         if (data) {
-            const facilitators = data.filter(function(user) {
-                return user.festType === 3; // facilitator
-            });
             const videoContentTable = $('#videoContentTable');
             const tableBody = $('<tbody>');
             if (data.length) {
@@ -361,7 +419,7 @@
 
             $("#updateVideoModal .modal-footer .btn-primary").click(function(e) {
                 const name = $('#updateVideoModal .modal-body input[name="name"]').val();
-                const url = $('#updateVideoModal .modal-body input[name="url"]').val();
+                const url = extractYoutubeID($('#updateVideoModal .modal-body input[name="url"]').val());
                 const festType = $('#updateVideoModal .modal-body select[name="festType"]').val();
                 const status = $('#updateVideoModal .modal-body select[name="status"]').val();
 
@@ -390,6 +448,41 @@
                         }
                     })
                 }
+            });
+
+            $("#createVideoModal .modal-footer .btn-primary").click(function(e) {
+                const name = $('#createVideoModal .modal-body input[name="name"]').val();
+                const url = extractYoutubeID($('#createVideoModal .modal-body input[name="url"]').val());
+                const festType = $('#createVideoModal .modal-body select[name="festType"]').val();
+
+                if (!(name && url && festType)) {
+                    return;
+                }
+
+                $.ajax({
+                    url: `${API_BASE_URL}/static`,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        name,
+                        url,
+                        festType,
+                        status: 1,
+                        fileType: 2,
+                    }),
+                    cors: true,
+                    contentType: 'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                    },
+                    success: function(response) {
+                        window.location.reload();
+                    }
+                });
             });
         } catch (e) {
             logout();

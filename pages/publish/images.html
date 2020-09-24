@@ -15,7 +15,6 @@
     <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="../../../assets/css/style.css">
-    <link rel="stylesheet" href="style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
 </head>
@@ -127,10 +126,15 @@
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                        <div class="col-md-12 stretch-card">
+                        <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <p class="card-title">Members</p>
+                                    <div class="row">
+                                        <div class="col-md-12 stretch-card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                                            <span class="card-title" style="margin: 0;">Static Images Contents</span>
+                                            <button class="btn btn-success" id="addImagesContent" data-toggle="modal" data-target="#createImagesModal">Add Images</button>
+                                        </div>
+                                    </div>
                                     <div>
                                         <div class="table-responsive">
                                             <table id="imagesContentTable" class="table table-striped">
@@ -179,7 +183,7 @@
                                 <input name="name" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <label for="url">url</label>
+                                <label for="url">URL</label>
                                 <input name="url" class="form-control" />
                             </div>
                             <div class="form-group">
@@ -209,6 +213,51 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="createImagesModal" tabindex="-1" role="dialog" aria-labelledby="createImagesModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Images Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input name="name" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label>Images File upload</label>
+                                    <input type="file" name="images" class="file-upload-default" accept="image/*" />
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" name="url" class="form-control file-upload-info" disabled placeholder="Upload Images">
+                                        <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="festType">Fest Type</label>
+                                <select name="festType" class="form-control">
+                                    <option value="1">UDGAAR</option>
+                                    <option value="2">VIPLAVA</option>
+                                    <option value="3">TEMPLE_CONNECT</option>
+                                    <option value="4">VALUE_EDUCATION</option>
+                                    <option value="5">CAMP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -228,6 +277,7 @@
 <!-- endinject -->
 <!-- Custom js for this page-->
 <script src="../../../assets/js/dashboard.js"></script>
+<script src="../../../assets/js/file-upload.js"></script>
 <!-- <script src="../../../assets/js/data-table.js"></script>
 <script src="../../../assets/js/jquery.dataTables.js"></script>
 <script src="../../../assets/js/dataTables.bootstrap4.js"></script> -->
@@ -246,6 +296,11 @@
             default:
                 return "OTHER";
         }
+    }
+
+    function uploadSuccessCb(response) {
+        const downloadLink = response.data.path;
+        $('#createImagesModal .modal-body input[name="url"]').val(downloadLink);
     }
 
     function populateData(data, viewDetails, updateImagess) {
@@ -390,6 +445,41 @@
                         }
                     })
                 }
+            });
+
+            $("#createImagesModal .modal-footer .btn-primary").click(function(e) {
+                const name = $('#createImagesModal .modal-body input[name="name"]').val();
+                const url = $('#createImagesModal .modal-body input[name="url"]').val();
+                const festType = $('#createImagesModal .modal-body select[name="festType"]').val();
+
+                if (!(name && url && festType)) {
+                    return;
+                }
+
+                $.ajax({
+                    url: `${API_BASE_URL}/static`,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        name,
+                        url,
+                        festType,
+                        status: 1,
+                        fileType: 3,
+                    }),
+                    cors: true,
+                    contentType: 'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                    },
+                    success: function(response) {
+                        window.location.reload();
+                    }
+                });
             });
         } catch (e) {
             logout();
