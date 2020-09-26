@@ -13,8 +13,8 @@
                 type: "POST",
                 url: `${API_BASE_URL}/upload`,
                 cors: true,
-                contentType: false,
-                processData: false,
+                contentType: 'application/json',
+                dataType: 'json',
                 secure: true,
                 headers: {
                     'Access-Control-Allow-Origin': '*',

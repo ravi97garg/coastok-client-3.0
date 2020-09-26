@@ -86,7 +86,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/answerQuestion">
+                        <a class="nav-link" href="../../pages/answerQuestion?page=1&per_page=10&status=PENDING">
                             <i class="mdi mdi-message-text menu-icon"></i>
                             <span class="menu-title">Answer Question</span>
                         </a>
@@ -241,6 +241,7 @@
             secure: true,
             headers: {
                 'Access-Control-Allow-Origin': '*',
+
             },
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -267,6 +268,7 @@
             secure: true,
             headers: {
                 'Access-Control-Allow-Origin': '*',
+
             },
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -370,6 +372,7 @@
                                             secure: true,
                                             headers: {
                                                 'Access-Control-Allow-Origin': '*',
+
                                             },
                                             beforeSend: function(xhr) {
                                                 xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -451,6 +454,7 @@
                 secure: true,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
+
                 },
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -498,6 +502,7 @@
                         secure: true,
                         headers: {
                             'Access-Control-Allow-Origin': '*',
+
                         },
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader("access_token", localStorage.getItem('token'));

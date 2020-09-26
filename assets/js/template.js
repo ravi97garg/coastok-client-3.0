@@ -69,6 +69,7 @@
                 secure: true,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
+
                 },
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -118,6 +119,7 @@
                     secure: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
+
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));

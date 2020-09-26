@@ -86,7 +86,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../../pages/answerQuestion">
+                        <a class="nav-link" href="../../../pages/answerQuestion?page=1&per_page=10&status=PENDING">
                             <i class="mdi mdi-message-text menu-icon"></i>
                             <span class="menu-title">Answer Question</span>
                         </a>
@@ -256,7 +256,6 @@
             // });
             const userTable = $('#userTable');
             const tableBody = $('<tbody>');
-            console.log(data);
             if (data.length) {
                 userTable
                     .append($('<thead><tr><td>Name</td><td>Email</td><td>Role</td><td>Actions</td></tr></thead>'));
@@ -303,7 +302,6 @@
                                     .autocomplete({
                                         minLength: 2,
                                         source: function(request, response) {
-                                            console.log('<<<<<<', request.term);
                                             response($.map(USER_ROLE, function(obj, key) {
 
                                                 if (obj.toUpperCase().indexOf(request.term.toUpperCase()) != -1) {
@@ -338,7 +336,6 @@
                                     .autocomplete({
                                         minLength: 2,
                                         source: function(request, response) {
-                                            console.log('>>>', request.term);
                                             $.ajax({
                                                 url: `${API_BASE_URL}/api/v1/area?per_page=100`,
                                                 method: 'GET',
@@ -348,6 +345,7 @@
                                                 secure: true,
                                                 headers: {
                                                     'Access-Control-Allow-Origin': '*',
+
                                                 },
                                                 beforeSend: function(xhr) {
                                                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -433,6 +431,7 @@
                     secure: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
+
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -455,6 +454,7 @@
                                 secure: true,
                                 headers: {
                                     'Access-Control-Allow-Origin': '*',
+
                                 },
                                 beforeSend: function(xhr) {
                                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -495,6 +495,7 @@
                     secure: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
+
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -546,6 +547,7 @@
                         secure: true,
                         headers: {
                             'Access-Control-Allow-Origin': '*',
+
                         },
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader("access_token", localStorage.getItem('token'));
