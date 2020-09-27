@@ -63,7 +63,7 @@
                     </li>
                 </ul>
                 <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-          <span class="mdi mdi-menu"></span>
+            <span class="mdi mdi-menu"></span>
         </button>
             </div>
         </nav>
@@ -468,8 +468,12 @@
                             .addClass('question-item')
                             .appendTo(cList);
                         $('<span/>')
-                            .addClass('question-category')
+                            .addClass('question-category green')
                             .text(QUESTION_CATEGORY[questions[i].category])
+                            .appendTo(li);
+                        $('<span/>')
+                            .addClass('question-category yellow')
+                            .text(answer == 0 ? 'PENDING' : 'RESOLVED')
                             .appendTo(li);
                         $('<p/>')
                             .addClass('question')
@@ -503,24 +507,26 @@
                             .addClass('question-details')
                             .text(`Asked on: ${day} ${month} ${year}`)
                             .appendTo(li);
-                        $('<button/>')
-                            .addClass('btn btn-primary')
-                            .click(function() {
-                                delete window.ansFile;
-                                state.questionId = questions[i]._id;
-                                $('#questionModal .recording').empty();
-                                $('#questionModal .recording-message').empty();
-                                $('#questionModal .modal-body .question').text(questions[i].askText);
-                                $('#recordButton').show().click(startRecording);
-                                $('#pauseButton').hide().click(pauseRecording);
-                                $('#stopButton').hide().click(stopRecording);
-                                $('#uploadButton').show();
-                                $('#controls .or').show();
-                            })
-                            .attr('data-toggle', 'modal')
-                            .attr('data-target', "#questionModal")
-                            .text('Reply')
-                            .appendTo(li);
+                        if (answer == 0) {
+                            $('<button/>')
+                                .addClass('btn btn-primary')
+                                .click(function() {
+                                    delete window.ansFile;
+                                    state.questionId = questions[i]._id;
+                                    $('#questionModal .recording').empty();
+                                    $('#questionModal .recording-message').empty();
+                                    $('#questionModal .modal-body .question').text(questions[i].askText);
+                                    $('#recordButton').show().click(startRecording);
+                                    $('#pauseButton').hide().click(pauseRecording);
+                                    $('#stopButton').hide().click(stopRecording);
+                                    $('#uploadButton').show();
+                                    $('#controls .or').show();
+                                })
+                                .attr('data-toggle', 'modal')
+                                .attr('data-target', "#questionModal")
+                                .text('Reply')
+                                .appendTo(li);
+                        }
                     });
 
 
@@ -582,7 +588,7 @@
             window.location.href = window.location.href.split(window.location.search)[0] + '?' + $.param({
                 status: this.value,
                 per_page,
-                page,
+                page: 1,
             })
         }).val(answer ? 'RESOLVED' : 'PENDING');
 
@@ -590,7 +596,7 @@
             window.location.href = window.location.href.split(window.location.search)[0] + '?' + $.param({
                 status: answer ? 'RESOLVED' : 'PENDING',
                 per_page: this.value,
-                page,
+                page: 1,
             })
         }).val(per_page);
     });
