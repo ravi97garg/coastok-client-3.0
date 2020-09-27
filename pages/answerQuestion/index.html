@@ -234,15 +234,18 @@
 
     function uploadSuccessCb(response) {
         const downloadLink = response.data.path;
+        console.log(response.data.path)
         this.ansFile = downloadLink
         $('#recordButton').hide();
         $('#pauseButton').hide();
         $('#stopButton').hide();
         $('#uploadButton').hide();
         $('#controls .or').hide();
-        var au = $('<audio/>')
+        if (production)
+
+            var au = $('<audio/>')
             .attr("controls", "true")
-            .attr("src", downloadLink);
+            .attr("src", safeLoadMedia(downloadLink));
 
         var div = $('<div/>')
             .append(au)
@@ -362,7 +365,7 @@
         //add controls to the <audio> element
         var au = $('<audio/>')
             .attr("controls", "true")
-            .attr("src", url);
+            .attr("src", safeLoadMedia(url));
 
         var div = $('<div/>')
             .append(au)
@@ -485,7 +488,7 @@
                         //   .appendTo(li);
                         if (questions[i].askAudio) {
                             $('<audio/>')
-                                .attr('src', questions[i].askAudio)
+                                .attr('src', safeLoadMedia(questions[i].askAudio))
                                 .attr('controls', true)
                                 .appendTo(li);
                         }

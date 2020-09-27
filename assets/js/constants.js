@@ -56,3 +56,11 @@ const STATUS = [
     "Inactive",
     "Deleted",
 ];
+
+function safeLoadMedia(mediaUrl) {
+    if (window.location.host === 'localhost') {
+        // localhost
+        return mediaUrl
+    }
+    return mediaUrl.replace('http://148.72.212.41:8080', 'https://admin-api.coastok.com');
+}
