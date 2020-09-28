@@ -51,7 +51,10 @@
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                             <img src="../../../assets/images/avatar-person.svg" alt="profile" />
-                            <span class="nav-profile-name">Unknown</span>
+                            <div style="display: inline-block; vertical-align: middle;">
+                                <div class="nav-profile-name">Unknown</div>
+                                <div class="nav-profile-designation"></div>
+                            </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                             <a class="dropdown-item">
@@ -79,10 +82,10 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="manage-area" class="nav-item">
                         <a class="nav-link" href="../../../pages/area">
                             <i class="mdi mdi-image-area menu-icon"></i>
-                            <span class="menu-title">Area</span>
+                            <span class="menu-title">Manage Area</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -159,7 +162,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                            <!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
                         </div>
                     </div>
                 </div>
@@ -187,9 +189,14 @@
                                 <label for="phone">Phone</label>
                                 <input name="phone" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="userRole">User Role</label>
                                 <input name="userRole" class="form-control"></input>
+                            </div> -->
+                            <div class="form-group">
+                                <label for="userRole">User Role</label>
+                                <select name="userRole" class="form-control">
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="area">Area</label>
@@ -226,6 +233,7 @@
 <!-- <script src="../../../assets/js/data-table.js"></script>
 <script src="../../../assets/js/jquery.dataTables.js"></script>
 <script src="../../../assets/js/dataTables.bootstrap4.js"></script> -->
+<script src="../../../assets/js/page-access.js"></script>
 <script>
     const state = {};
     const updateUserState = {};
@@ -263,26 +271,53 @@
                 $.each(data, function(i, item) {
                     if (viewDetails) {
                         var detailsBtn = $('<button>')
-                            .append('<i class="mdi mdi-eye"></i>')
+                            .text("View")
                             .attr('data-toggle', 'modal')
                             .attr('data-target', "#viewMemberModal")
                             .attr('title', "View Details")
                             .addClass('btn btn-primary')
                             .click(function() {
-                                $('#viewMemberModal .modal-body').empty();
-                                $.each(item, function(key, value) {
-                                    $('#viewMemberModal .modal-body')
-                                        .append(
-                                            $('<div>' + key.toUpperCase() + ' : ' + (typeof value === 'object' ? JSON.stringify(value) : value) + '</div>')
-                                            .addClass('text-ellipsis')
-                                        );
-                                });
+                                $('#viewMemberModal .modal-body')
+                                    .empty()
+                                    .append(
+                                        $(`<div class="member-modal-view">
+                                    <div class="chips">
+                                        <div>${item.connectedArea || 'unknown connected Area'}</div>
+                                        <div>${GENDER[item.gender] || 'unknown gender'}</div>
+                                        <div>${MARITAL_STATUS[item.maritalStatus] || 'unknown marital status'}</div>
+                                        <div>${STATUS[item.status]}</div>
+                                    </div>
+                                    <div class="basic-info-wrap">
+                                        <img src="${item.imageUrl || '../../../assets/images/avatar-person.svg'}" 
+                                        style="width:20%; height:20%; border-radius:100px; border:2px solid #da4"/>
+                                        <div class="basic-info">
+                                            <div class="name">${item.initiatedName ? item.initiatedName : item.name}</div>
+                                            <div class="designation">${USER_ROLE[item.userRole]}</div>
+                                            <div class="email">${item.email}</div>
+                                            <div class="phone">${item.phone}</div>
+                                            <div class="facilitator">Facilitator: ${(item.facilitator && item.facilitator.name) || 'Unknown'}</div>
+                                            <div class="rounds">Chanting ${item.chantingRounds} Rounds</div>
+                                        </div>
+                                    </div>
+                                    <div class="other-details">
+                                        <div>Connected Since ${new Intl.DateTimeFormat('en-GB', {
+                                            year: 'numeric',
+                                            month: 'numeric',
+                                            day: 'numeric'
+                                        }).format(new Date(item.connectedSince)) || 'Unknown'}</div>
+                                        ${item.chantingTarget2 ? '<div>Reached 2 Rounds target on '+item.chantingTarget2+'</div>' : ''}
+                                        ${item.chantingTarget4 ? '<div>Reached 4 Rounds target on '+item.chantingTarget4+'</div>' : ''}
+                                        ${item.expertiseArea ? '<div>Expertise in '+item.expertiseArea+'</div>' : ''}
+                                        ${item.profession ? '<div>'+item.profession+' by Profession</div>' : ''}
+                                    </div>
+                                 </div>`)
+                                    );
                             });
                     }
                     var updateBtn = $('<span>');
                     if (updateUsers) {
                         var updateBtn = $('<button>')
-                            .append('<i class="mdi mdi-lead-pencil"></i>')
+                            .text("Edit")
                             .attr('data-toggle', 'modal')
                             .attr('data-target', "#updateUserModal")
                             .attr('title', "Edit Area Details")
@@ -298,40 +333,40 @@
                                     .val(item.email);
                                 $('#updateUserModal .modal-body input[name="phone"]')
                                     .val(item.phone);
-                                $('#updateUserModal .modal-body input[name="userRole"]')
-                                    .autocomplete({
-                                        minLength: 2,
-                                        source: function(request, response) {
-                                            response($.map(USER_ROLE, function(obj, key) {
+                                // $('#updateUserModal .modal-body input[name="userRole"]')
+                                //     .autocomplete({
+                                //         minLength: 2,
+                                //         source: function(request, response) {
+                                //             response($.map(USER_ROLE, function(obj, key) {
 
-                                                if (obj.toUpperCase().indexOf(request.term.toUpperCase()) != -1) {
-                                                    return {
-                                                        label: obj, // Label for Display
-                                                        value: key // Value
-                                                    }
-                                                } else {
-                                                    return null;
-                                                }
-                                            }));
-                                        },
-                                        focus: function(event, ui) {
-                                            event.preventDefault();
-                                        },
-                                        // Once a value in the drop down list is selected, do the following:
-                                        select: function(event, ui) {
-                                            event.preventDefault();
-                                            // place the person.given_name value into the textfield called 'select_origin'...
-                                            $('#updateUserModal .modal-body input[name="userRole"]').val(ui.item.label);
-                                            // ... any other tasks (like setting Hidden Fields) go here...
-                                            updateUserState.userRole = ui.item.value;
-                                        },
-                                        change: function(event, ui) {
-                                            if (ui.item == null || ui.item == undefined) {
-                                                $('#updateUserModal .modal-body input[name="userRole"]')
-                                                    .val("");
-                                            }
-                                        }
-                                    }).val(USER_ROLE[item.userRole]);
+                                //                 if (obj.toUpperCase().indexOf(request.term.toUpperCase()) != -1) {
+                                //                     return {
+                                //                         label: obj, // Label for Display
+                                //                         value: key // Value
+                                //                     }
+                                //                 } else {
+                                //                     return null;
+                                //                 }
+                                //             }));
+                                //         },
+                                //         focus: function(event, ui) {
+                                //             event.preventDefault();
+                                //         },
+                                //         // Once a value in the drop down list is selected, do the following:
+                                //         select: function(event, ui) {
+                                //             event.preventDefault();
+                                //             // place the person.given_name value into the textfield called 'select_origin'...
+                                //             $('#updateUserModal .modal-body input[name="userRole"]').val(ui.item.label);
+                                //             // ... any other tasks (like setting Hidden Fields) go here...
+                                //             updateUserState.userRole = ui.item.value;
+                                //         },
+                                //         change: function(event, ui) {
+                                //             if (ui.item == null || ui.item == undefined) {
+                                //                 $('#updateUserModal .modal-body input[name="userRole"]')
+                                //                     .val("");
+                                //             }
+                                //         }
+                                //     }).val(USER_ROLE[item.userRole]);
                                 $('#updateUserModal .modal-body input[name="area"]')
                                     .autocomplete({
                                         minLength: 2,
@@ -421,18 +456,21 @@
             if (userProfile.userRole === 4) {
                 // if the logged in user is an Area leader or General Secretary
                 // 1. Fetch the logged in area leader's connected area
+                $('#updateUserModal .modal-body input[name="area"]').attr('disabled', 'disabled');
+                $.each(USER_ROLE.slice(1, 4), function(i, item) {
+                    $(`<option value="${i}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
+                });
                 $.ajax({
                     type: "GET",
                     url: `${API_BASE_URL}/user?${$.param({
-            id: userProfile._id,
-          })}`,
+                        id: userProfile._id,
+                    })}`,
                     dataType: 'json',
                     cors: true,
                     contentType: 'application/json',
                     secure: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
-
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -446,16 +484,15 @@
                             $.ajax({
                                 type: "GET",
                                 url: `${API_BASE_URL}/user?${$.param({
-                  connectedAreaId: area,
-                  per_page: 1000
-                })}`,
+                                connectedAreaId: area,
+                                per_page: 1000
+                                })}`,
                                 dataType: 'json',
                                 cors: true,
                                 contentType: 'application/json',
                                 secure: true,
                                 headers: {
                                     'Access-Control-Allow-Origin': '*',
-
                                 },
                                 beforeSend: function(xhr) {
                                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -477,15 +514,18 @@
                 // if the logged in user is general secretary
                 // fetch all the pending users
                 var apiUrl;
+                $.each(USER_ROLE.slice(1), function(i, item) {
+                    $(`<option value="${i}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
+                });
                 if (userProfile.userRole === 5) {
                     apiUrl = `${API_BASE_URL}/user?${$.param({
-            assistantDirector: userProfile._id,
-            per_page: 1000
-          })}`
+                    assistantDirector: userProfile._id,
+                    per_page: 1000
+                })}`
                 } else {
                     apiUrl = `${API_BASE_URL}/user?${$.param({
-            per_page: 10000
-          })}`
+                    per_page: 10000
+                })}`
                 }
                 $.ajax({
                     type: "GET",
@@ -495,8 +535,7 @@
                     contentType: 'application/json',
                     secure: true,
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
-
+                        'Access-Control-Allow-Origin': '*'
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));

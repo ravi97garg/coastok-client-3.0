@@ -22166,10 +22166,22 @@ dl li {
     margin-right: .5rem;
     color: #4a4a4a;
     font-weight: 500;
+    line-height: 16px;
+}
+
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-designation {
+    margin-left: .5rem;
+    margin-right: .5rem;
+    color: #4a4a4a;
+    line-height: 16px;
+    font-size: 12px;
 }
 
 @media (max-width: 767px) {
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-name {
+        display: none;
+    }
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.nav-profile .nav-link .nav-profile-designation {
         display: none;
     }
 }
@@ -23687,4 +23699,37 @@ input[type="checkbox"] {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.member-modal-view .basic-info-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    margin-bottom: 16px;
+}
+
+.member-modal-view .basic-info-wrap .basic-info {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.member-modal-view .basic-info-wrap .basic-info .name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.member-modal-view .chips>div {
+    padding: 4px 12px;
+    background-color: #333;
+    color: white;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-right: 4px;
+    width: fit-content;
+    display: inline-block;
+    margin-bottom: 20px;
 }

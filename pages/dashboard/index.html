@@ -142,7 +142,10 @@
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                             <img src="../../assets/images/avatar-person.svg" alt="profile" />
-                            <span class="nav-profile-name">Unknown</span>
+                            <div style="display: inline-block; vertical-align: middle;">
+                                <div class="nav-profile-name">Unknown</div>
+                                <div class="nav-profile-designation"></div>
+                            </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                             <a class="dropdown-item">
@@ -170,10 +173,10 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="manage-area" class="nav-item">
                         <a class="nav-link" href="../../pages/area">
                             <i class="mdi mdi-image-area menu-icon"></i>
-                            <span class="menu-title">Area</span>
+                            <span class="menu-title">Manage Area</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -619,33 +622,7 @@
     <!-- <script src="../../assets/js/data-table.js"></script>
     <script src="../../assets/js/jquery.dataTables.js"></script> -->
     <!-- <script src="../../assets/js/dataTables.bootstrap4.js"></script> -->
-    <!--  <script>-->
-    <!--    function logout() {-->
-    <!--      localStorage.removeItem('token');-->
-    <!--      localStorage.removeItem('userProfile');-->
-    <!--      window.location.href = window.location.origin + '/pages/login/index.html';-->
-    <!--    }-->
-
-    <!--    $(document).ready(function() {-->
-    <!--      const token = localStorage.getItem('token');-->
-    <!--      let userProfile = localStorage.getItem('userProfile');-->
-    <!--      try{-->
-    <!--        if(token && userProfile){-->
-    <!--          userProfile = JSON.parse(userProfile);-->
-    <!--          $('#profileDropdown > img').attr("src",userProfile.imageUrl || "../../assets/images/avatar-person.svg");-->
-    <!--          $('#profileDropdown > span').text(userProfile.name || "Anonymous");-->
-    <!--        } else {-->
-    <!--          logout();-->
-    <!--        }-->
-    <!--      } catch (err) {-->
-    <!--        logout();-->
-    <!--      }-->
-    <!--      $("#logoutBtn").click(function (){-->
-    <!--        logout();-->
-    <!--      })-->
-    <!--    })-->
-    <!--  </script>-->
-    <!-- End custom js for this page-->
+    <script src="../../assets/js/page-access.js"></script>
 </body>
 
 </html>

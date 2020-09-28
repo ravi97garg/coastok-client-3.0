@@ -50,7 +50,10 @@
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                             <img src="../../assets/images/avatar-person.svg" alt="profile" />
-                            <span class="nav-profile-name">Unknown</span>
+                            <div style="display: inline-block; vertical-align: middle;">
+                                <div class="nav-profile-name">Unknown</div>
+                                <div class="nav-profile-designation"></div>
+                            </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                             <a class="dropdown-item">
@@ -78,10 +81,10 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="manage-area" class="nav-item">
                         <a class="nav-link" href="../../pages/area">
                             <i class="mdi mdi-image-area menu-icon"></i>
-                            <span class="menu-title">Area</span>
+                            <span class="menu-title">Manage Area</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -191,7 +194,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-primary">Send Reply</button>
                         </div>
                     </div>
                 </div>
@@ -200,6 +203,7 @@
     </div>
 </body>
 <!-- plugins:js -->
+<script src="../../assets/js/constants.js"></script>
 <script src="../../vendors/base/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page-->
@@ -217,9 +221,9 @@
 <!-- <script src="../../assets/js/data-table.js"></script>
 <script src="../../assets/js/jquery.dataTables.js"></script>
 <script src="../../assets/js/dataTables.bootstrap4.js"></script> -->
-<script src="../../assets/js/constants.js"></script>
 <script src="../../assets/js/recorder.js"></script>
 <script src="../../assets/js/file-upload.js"></script>
+<script src="../../assets/js/page-access.js"></script>
 <script src="./script.js"></script>
 <script>
     URL = window.URL || window.webkitURL;
@@ -309,7 +313,12 @@
                 rec.record()
 
             }).catch(function(err) {
-                console.log(err);
+                $("#recordButton").show();
+                $("#stopButton").hide();
+                $("#pauseButton").hide();
+                $('#uploadButton').show();
+                $('#controls .or').show();
+                alert('Please allow recording in the site settings');
             });
         } catch (e) {
             alert(e)
@@ -545,6 +554,7 @@
         $("#questionModal .modal-footer .btn-primary").click(function(e) {
             const ansText = $.trim($("#questionModal textarea").val());
             const ansFile = window.ansFile;
+            state.ansTime = new Date();
             if (ansText || ansFile) {
                 state.payload = {};
                 if (ansText) {

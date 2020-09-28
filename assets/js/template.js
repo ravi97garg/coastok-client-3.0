@@ -134,7 +134,10 @@
                                 $('#profileDropdown > img').attr("src", userProfile.imageUrl);
                             }
                             if (userProfile.name) {
-                                $('#profileDropdown > span').text(userProfile.name);
+                                $('#profileDropdown .nav-profile-name').text(userProfile.name);
+                            }
+                            if (userProfile.userRole) {
+                                $('#profileDropdown .nav-profile-designation').text(USER_ROLE[userProfile.userRole]);
                             }
                         }
                     },
