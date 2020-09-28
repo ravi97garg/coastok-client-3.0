@@ -294,19 +294,42 @@
                             )
                         });
                         assignFacilitator = $('<button>')
-                            .append('<i class="mdi mdi-account-check"></i>')
-                            .attr('data-toggle', 'modal')
-                            .attr('data-target', "#assignFacilitatorModal")
-                            .attr('title', "Assign Facilitator")
+                            .text('Approve')
+                            // .append('<i class="mdi mdi-account-check"></i>')
+                            // .attr('data-toggle', 'modal')
+                            // .attr('data-target', "#assignFacilitatorModal")
+                            .attr('title', "Approve Member")
                             .addClass('btn btn-primary')
                             .css("margin-left", "16px")
                             .click(function() {
-                                state.currentUser = item;
-                                $('#assignFacilitatorModal .modal-body')
-                                    .empty()
-                                    .append(
-                                        facilitatorSelect
-                                    );
+                                // $('#assignFacilitatorModal .modal-body')
+                                //     .empty()
+                                //     .append(
+                                //         facilitatorSelect
+                                //     );
+                                $.ajax({
+                                    method: "PUT",
+                                    url: `${API_BASE_URL}/user/${item._id}`,
+                                    cors: true,
+                                    dataType: 'json',
+                                    contentType: 'application/json',
+                                    secure: true,
+                                    headers: {
+                                        'Access-Control-Allow-Origin': '*',
+                                    },
+                                    beforeSend: function(xhr) {
+                                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                                    },
+                                    data: JSON.stringify({
+                                        userRole: 1,
+                                    }),
+                                    success: function(response) {
+                                        window.location.reload();
+                                    },
+                                    error: function(err) {
+                                        alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));;
+                                    },
+                                });
                             });
                     }
                     var $tr = $('<tr>').append(
@@ -444,31 +467,31 @@
         $('#assignFacilitatorModal .modal-footer .btn-primary').click(function() {
             const selected = $('#assignFacilitatorModal .modal-body select').val();
             if (selected) {
-                $.ajax({
-                    method: "PUT",
-                    url: `${API_BASE_URL}/user/${state.currentUser._id}`,
-                    cors: true,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    secure: true,
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
+                // $.ajax({
+                //     method: "PUT",
+                //     url: `${API_BASE_URL}/user/${state.currentUser._id}`,
+                //     cors: true,
+                //     dataType: 'json',
+                //     contentType: 'application/json',
+                //     secure: true,
+                //     headers: {
+                //         'Access-Control-Allow-Origin': '*',
 
-                    },
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
-                    },
-                    data: JSON.stringify({
-                        userRole: 1,
-                        facilitator: selected,
-                    }),
-                    success: function(response) {
-                        window.location.reload();
-                    },
-                    error: function(err) {
-                        alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));;
-                    },
-                });
+                //     },
+                //     beforeSend: function(xhr) {
+                //         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                //     },
+                //     data: JSON.stringify({
+                //         userRole: 1,
+                //         facilitator: selected,
+                //     }),
+                //     success: function(response) {
+                //         window.location.reload();
+                //     },
+                //     error: function(err) {
+                //         alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));;
+                //     },
+                // });
             }
         })
     });
