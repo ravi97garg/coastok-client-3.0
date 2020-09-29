@@ -16,6 +16,8 @@ Manage Static Content: [4,5,6,7]
             var userRole = userProfile.userRole;
             if (userRole === 4) {
                 $('#manage-area').hide();
+            } else {
+                $('#my-area').hide();
             }
         } catch (err) {
             console.log(err);

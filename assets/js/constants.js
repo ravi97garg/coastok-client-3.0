@@ -28,8 +28,10 @@ const FEST_TYPE = {
     1: "UDGAAR",
     2: "VIPLAVA",
     3: "TEMPLE_CONNECT",
-    4: "VALUE_EDUCATION",
-    5: "CAMP"
+    4: "COLLEGE_COACHING",
+    5: "VALUE_EDUCATION",
+    6: "CAMP",
+    7: "COASTOK_VIDEOS"
 };
 
 const FILE_TYPE = {
