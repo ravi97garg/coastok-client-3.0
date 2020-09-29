@@ -190,9 +190,19 @@
                                 <label for="name">Name</label>
                                 <input name="name" class="form-control" />
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="url">URL</label>
                                 <input name="url" class="form-control" />
+                            </div> -->
+                            <div class="form-group">
+                                <label>Images File upload</label>
+                                <input type="file" name="images" class="file-upload-default" accept="image/*" />
+                                <div class="input-group col-xs-12">
+                                    <input type="text" name="url" class="form-control file-upload-info" disabled placeholder="Upload Images">
+                                    <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                      </span>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="festType">Fest Type</label>
@@ -238,15 +248,13 @@
                                 <input name="name" class="form-control" />
                             </div>
                             <div class="form-group">
-                                <div class="form-group">
-                                    <label>Images File upload</label>
-                                    <input type="file" name="images" class="file-upload-default" accept="image/*" />
-                                    <div class="input-group col-xs-12">
-                                        <input type="text" name="url" class="form-control file-upload-info" disabled placeholder="Upload Images">
-                                        <span class="input-group-append">
+                                <label>Images File upload</label>
+                                <input type="file" name="images" class="file-upload-default" accept="image/*" />
+                                <div class="input-group col-xs-12">
+                                    <input type="text" name="url" class="form-control file-upload-info" disabled placeholder="Upload Images">
+                                    <span class="input-group-append">
                                         <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                                       </span>
-                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -312,6 +320,7 @@
     function uploadSuccessCb(response) {
         const downloadLink = response.data.path;
         $('#createImagesModal .modal-body input[name="url"]').val(downloadLink);
+        $('#updateImagesModal .modal-body input[name="url"]').val(downloadLink);
     }
 
     function populateData(data, viewDetails, updateImagess) {
@@ -442,7 +451,7 @@
                         data: JSON.stringify({
                             name,
                             url,
-                            festType,
+                            festType: +festType,
                             status,
                         }),
                         cors: true,
@@ -478,7 +487,7 @@
                     data: JSON.stringify({
                         name,
                         url,
-                        festType,
+                        festType: +festType,
                         status: 1,
                         fileType: 3,
                     }),

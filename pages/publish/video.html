@@ -445,7 +445,7 @@
                         data: JSON.stringify({
                             name,
                             url,
-                            festType,
+                            festType: +festType,
                             status,
                         }),
                         cors: true,
@@ -481,7 +481,7 @@
                     data: JSON.stringify({
                         name,
                         url,
-                        festType,
+                        festType: +festType,
                         status: 1,
                         fileType: 2,
                     }),
@@ -490,7 +490,6 @@
                     secure: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
-
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
