@@ -302,11 +302,6 @@
                             .addClass('btn btn-primary')
                             .css("margin-left", "16px")
                             .click(function() {
-                                // $('#assignFacilitatorModal .modal-body')
-                                //     .empty()
-                                //     .append(
-                                //         facilitatorSelect
-                                //     );
                                 $.ajax({
                                     method: "PUT",
                                     url: `${API_BASE_URL}/user/${item._id}`,

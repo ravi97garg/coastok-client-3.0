@@ -135,7 +135,7 @@
                                     <div class="row">
                                         <div class="col-md-12 stretch-card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
                                             <span class="card-title" style="margin: 0;">Static Audio Contents</span>
-                                            <button class="btn btn-success" id="addAudioContent" data-toggle="modal" data-target="#createAudioModal">Add Audio</button>
+                                            <button class="btn btn-success" style="display: none;" id="addAudioContent" data-toggle="modal" data-target="#createAudioModal">Add Audio</button>
                                         </div>
                                     </div>
                                     <div>
@@ -338,6 +338,8 @@
                     }
                     var updateBtn = $('<span>');
                     if (updateAudios) {
+                        $('#addAudioContent')
+                            .show();
                         var updateBtn = $('<button>')
                             .text("Edit")
                             .attr('data-toggle', 'modal')

@@ -330,12 +330,11 @@
                                 secure: true,
                                 headers: {
                                     'Access-Control-Allow-Origin': '*',
-
                                 },
                                 beforeSend: function(xhr) {
                                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
                                 },
-                                success: function() {
+                                success: function(response) {
                                     buildCells(response)
                                 },
                                 error: function(err) {
@@ -351,13 +350,13 @@
             } else {
                 if (userProfile.userRole === 5) {
                     apiUrl = `${API_BASE_URL}/user?${$.param({
-            assistantDirector: userProfile._id,
-            per_page: 10000
-          })}`;
+                        assistantDirector: userProfile._id,
+                        per_page: 10000
+                    })}`;
                 } else {
                     apiUrl = `${API_BASE_URL}/user?${$.param({
-            per_page: 10000
-          })}`;
+                        per_page: 10000
+                    })}`;
                 }
                 $.ajax({
                     type: "GET",
