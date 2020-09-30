@@ -12,12 +12,11 @@ Manage Static Content: [4,5,6,7]
     'use strict';
     $(function() {
         try {
-            var userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            var userRole = userProfile.userRole;
+            const userRole = getCurrentUserRole();
             if (userRole === 4) {
-                $('#manage-area').hide();
+                $('#my-area').show();
             } else {
-                $('#my-area').hide();
+                $('#manage-area').show();
             }
         } catch (err) {
             console.log(err);

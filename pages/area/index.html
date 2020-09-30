@@ -57,8 +57,8 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item">
-                                <i class="mdi mdi-settings text-primary"></i> Settings
+                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
                                 <i class="mdi mdi-logout text-primary"></i> Logout
@@ -76,7 +76,7 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item">
+                    <li id="dashboard-page" class="nav-item">
                         <a class="nav-link" href="../../pages/dashboard">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
@@ -94,13 +94,13 @@
                             <span class="menu-title">My Area</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="question-page" class="nav-item">
                         <a class="nav-link" href="../../pages/answerQuestion?page=1&per_page=10">
                             <i class="mdi mdi-message-text menu-icon"></i>
                             <span class="menu-title">Answer Question</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="user-page" class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false" aria-controls="user-actions">
                             <i class="mdi mdi-account-settings menu-icon"></i>
                             <span class="menu-title">Manage User</span>
@@ -108,16 +108,16 @@
                         </a>
                         <div class="collapse" id="user-actions">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="../../pages/user">View Members</a>
+                                <!-- <li class="nav-item"><a class="nav-link" href="../../pages/user">View Members</a></li> -->
+                                <li class="nav-item"><a class="nav-link" href="../../pages/user/pending">Pending
+                    Members</a>
                                 </li>
-                                <li class="nav-item"> <a class="nav-link" href="../../pages/user/pending">Pending
-                                        Members</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="../../pages/user/update">Update Member
-                                        Details</a></li>
+                                <li class="nav-item"><a class="nav-link" href="../../pages/user/update">All Members</a>
+                                </li>
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li id="static-page" class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#content-actions" aria-expanded="false" aria-controls="content-actions">
                             <i class="mdi mdi-arrow-up-bold-hexagon-outline menu-icon"></i>
                             <span class="menu-title">Manage Static Content</span>
@@ -143,7 +143,12 @@
                                     <div class="row">
                                         <div class="col-md-12 stretch-card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
                                             <span class="card-title" style="margin: 0;">Area Details</span>
-                                            <button class="btn btn-success" id="addAreaBtn" data-toggle="modal" data-target="#createAreaModal">Add Area</button>
+                                            <div class="form-group" style="margin: 0; min-width: 200px;">
+                                                <select class="form-control form-control-sm" id="selectAsstDirector">
+                                                    <option value="all">ALL</option>
+                                                </select>
+                                            </div>
+                                            <button class="btn btn-success" id="addAreaBtn" style="display: none;" data-toggle="modal" data-target="#createAreaModal">Add Area</button>
                                         </div>
                                     </div>
                                     <div class="table-responsive">
@@ -176,6 +181,10 @@
                     </button>
                         </div>
                         <div class="modal-body">
+                            <div class="form-group">
+                                <label for="areaCode">Area Code</label>
+                                <input name="areaCode" class="form-control" />
+                            </div>
                             <div class="form-group">
                                 <label for="areaName">Area Name</label>
                                 <input name="areaName" class="form-control" />
@@ -228,6 +237,10 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
+                                <label for="areaCode">Area Code</label>
+                                <input name="areaCode" class="form-control" />
+                            </div>
+                            <div class="form-group">
                                 <label for="areaName">Area Name</label>
                                 <input name="areaName" class="form-control" />
                             </div>
@@ -273,6 +286,10 @@
 <script src="../../assets/js/page-access.js"></script>
 <script>
     const editAreaState = {};
+
+    function getQueryStringValue(key) {
+        return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+    }
 
     function setAreaLeaderCandidates(areaId) {
         $.ajax({
@@ -325,6 +342,7 @@
                 }
                 var updateBtn = $('<span>');
                 if (updateDetails) {
+                    $('#addAreaBtn').show();
                     var updateBtn = $('<button>')
                         .text("Edit")
                         .attr('data-toggle', 'modal')
@@ -340,6 +358,8 @@
                             // $('#editAreaModal .modal-body').empty();
                             $('#editAreaModal .modal-body input[name="areaName"]')
                                 .val(area.name);
+                            $('#editAreaModal .modal-body input[name="areaCode"]')
+                                .val(area.code);
                             $('#editAreaModal .modal-body input[name="areaLeader"]')
                                 .autocomplete({
                                     minLength: 3,
@@ -467,19 +487,26 @@
                 }
             });
         } else {
-            $('#areaTable').replaceWith($('<div>').text('No Pending Approval Requests'));
+            $('#areaTable').replaceWith($('<div>').text('No Areas Available'));
         }
     }
 
     $(document).ready(function() {
         try {
-            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            const userRole = userProfile.userRole;
+            const userRole = getCurrentUserRole();
+            const asstDirector = getQueryStringValue('asstDirector');
+            let apiUrl = `${API_BASE_URL}/area?${$.param({
+                    per_page: 100
+                })}`
+            if (asstDirector && asstDirector !== 'all') {
+                apiUrl = `${API_BASE_URL}/area?${$.param({
+                    per_page: 100,
+                    assistantDirector: asstDirector,
+                })}`
+            }
             $.ajax({
                 type: "GET",
-                url: `${API_BASE_URL}/area?${$.param({
-                    per_page: 100
-                })}`,
+                url: apiUrl,
                 dataType: 'json',
                 cors: true,
                 contentType: 'application/json',
@@ -492,9 +519,9 @@
                 },
                 success: function(response) {
                     const areas = (response.data && response.data.data) || [];
-                    if (userProfile.userRole === 7) {
+                    if (userRole === 7) {
                         populateData(areas, true, false);
-                    } else if (userProfile.userRole === 6) {
+                    } else if (userRole === 6) {
                         populateData(areas, true, true);
                     } else {
                         /*waise toh ye page khulna hi nahin chahiye kyuki area leader
@@ -506,6 +533,42 @@
                 error: function(err) {
                     alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
                 },
+            });
+
+            if (userRole === 6 || userRole === 7) {
+                $.ajax({
+                    type: "GET",
+                    url: `${API_BASE_URL}/user?${$.param({
+                    userRole: 5,
+                    per_page: 100
+                })}`,
+                    dataType: 'json',
+                    cors: true,
+                    contentType: 'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                    },
+                    success: function(response) {
+                        const users = (response.data && response.data.data) || [];
+                        $.each(users, function(i, item) {
+                            $('<option/>').val(item._id).text(item.name).appendTo($('#selectAsstDirector'));
+                        });
+                        $('#selectAsstDirector').val(users.map(e => e._id).includes(asstDirector) ? asstDirector : 'all');
+                    },
+                    error: function(err) {
+                        alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+                    },
+                });
+            }
+
+            $('#selectAsstDirector').on('change', function() {
+                window.location.href = window.location.href.split(window.location.search)[0] + '?' + $.param({
+                    asstDirector: this.value,
+                });
             });
 
             $("#editAreaModal .modal-footer .btn-primary").click(function(e) {
@@ -540,7 +603,9 @@
 
             $("#createAreaModal .modal-footer .btn-primary").click(function(e) {
                 const areaName = $('#createAreaModal .modal-body input[name="areaName"]').val();
-                if (!(areaName)) {
+                const areaCode = $('#createAreaModal .modal-body input[name="areaCode"]').val();
+                if (!(areaName && areaCode)) {
+                    alert('Both Area Name and Area Code are required');
                     return;
                 }
                 $.ajax({
@@ -548,7 +613,8 @@
                     method: 'POST',
                     dataType: 'json',
                     data: JSON.stringify({
-                        areaName,
+                        name: areaName,
+                        code: areaCode,
                         areaLeader: createAreaState.areaLeader,
                         assistantDirector: createAreaState.assistantDirector,
                     }),
@@ -679,6 +745,7 @@
 
         $("#addAreaBtn").click(function() {
             $('#createAreaModal .modal-body input[name="areaName"]').val('');
+            $('#createAreaModal .modal-body input[name="areaCode"]').val('');
             $('#createAreaModal .modal-body input[name="areaLeader"]').val('');
             $('#createAreaModal .modal-body input[name="asstDirector"]').val('');
             createAreaState = {};

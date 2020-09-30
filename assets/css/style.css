@@ -23733,3 +23733,7 @@ input[type="checkbox"] {
     display: inline-block;
     margin-bottom: 20px;
 }
+
+.nav-item {
+    display: none;
+}

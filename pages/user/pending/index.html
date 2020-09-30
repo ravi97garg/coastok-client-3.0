@@ -55,8 +55,8 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item">
-                                <i class="mdi mdi-settings text-primary"></i> Settings
+                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
                                 <i class="mdi mdi-logout text-primary"></i> Logout
@@ -74,7 +74,7 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item">
+                    <li id="dashboard-page" class="nav-item">
                         <a class="nav-link" href="../../../pages/dashboard">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
@@ -92,13 +92,13 @@
                             <span class="menu-title">My Area</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="question-page" class="nav-item">
                         <a class="nav-link" href="../../../pages/answerQuestion?page=1&per_page=10">
                             <i class="mdi mdi-message-text menu-icon"></i>
                             <span class="menu-title">Answer Question</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="user-page" class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false" aria-controls="user-actions">
                             <i class="mdi mdi-account-settings menu-icon"></i>
                             <span class="menu-title">Manage User</span>
@@ -106,14 +106,16 @@
                         </a>
                         <div class="collapse" id="user-actions">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"><a class="nav-link" href="../../../pages/user">View Members</a></li>
-                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/pending">Pending Members</a></li>
-                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/update">Update Member Details</a>
+                                <!-- <li class="nav-item"><a class="nav-link" href="../../../pages/user">View Members</a></li> -->
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/pending">Pending
+                    Members</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/update">All Members</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li id="static-page" class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#content-actions" aria-expanded="false" aria-controls="content-actions">
                             <i class="mdi mdi-arrow-up-bold-hexagon-outline menu-icon"></i>
                             <span class="menu-title">Manage Static Content</span>
@@ -386,7 +388,7 @@
                         const area = response.data &&
                             response.data.data &&
                             response.data.data[0] &&
-                            response.data.data[0].connectedArea;
+                            (response.data.data[0].connectedAreaId || response.data.data[0].connectedArea);
                         if (area) {
                             $.ajax({
                                 type: "GET",

@@ -57,8 +57,8 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item">
-                                <i class="mdi mdi-settings text-primary"></i> Settings
+                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
                                 <i class="mdi mdi-logout text-primary"></i> Logout
@@ -76,7 +76,7 @@
             <!-- partial:partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item">
+                    <li id="dashboard-page" class="nav-item">
                         <a class="nav-link" href="../../../pages/dashboard">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
@@ -94,13 +94,13 @@
                             <span class="menu-title">My Area</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="question-page" class="nav-item">
                         <a class="nav-link" href="../../../pages/answerQuestion?page=1&per_page=10">
                             <i class="mdi mdi-message-text menu-icon"></i>
                             <span class="menu-title">Answer Question</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li id="user-page" class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#user-actions" aria-expanded="false" aria-controls="user-actions">
                             <i class="mdi mdi-account-settings menu-icon"></i>
                             <span class="menu-title">Manage User</span>
@@ -108,16 +108,16 @@
                         </a>
                         <div class="collapse" id="user-actions">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"><a class="nav-link" href="../../../pages/user">View Members</a></li>
+                                <!-- <li class="nav-item"><a class="nav-link" href="../../../pages/user">View Members</a></li> -->
                                 <li class="nav-item"><a class="nav-link" href="../../../pages/user/pending">Pending
                     Members</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/update">Update Member Details</a>
+                                <li class="nav-item"><a class="nav-link" href="../../../pages/user/update">All Members</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <li id="static-page" class="nav-item">
                         <a class="nav-link" data-toggle="collapse" href="#content-actions" aria-expanded="false" aria-controls="content-actions">
                             <i class="mdi mdi-arrow-up-bold-hexagon-outline menu-icon"></i>
                             <span class="menu-title">Manage Static Content</span>
@@ -199,14 +199,14 @@
                                 <label for="userRole">User Role</label>
                                 <input name="userRole" class="form-control"></input>
                             </div> -->
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="userRole">User Role</label>
                                 <select name="userRole" class="form-control">
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="area">Area</label>
-                                <input name="area" class="form-control"></input>
+                                <select name="area" class="form-control"></select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -262,12 +262,6 @@
             const facilitators = data.filter(function(user) {
                 return user.userRole === 3; // facilitator
             });
-            // const nonCoastok = data.filter(function (user) {
-            //   return user.userRole === 0; // non coastok member
-            // });
-            // const areaMembers = nonCoastok.filter(function (mem) {
-            //   return mem.chantingRounds >= 4 // those who are doing good
-            // });
             const userTable = $('#userTable');
             const tableBody = $('<tbody>');
             if (data.length) {
@@ -339,93 +333,14 @@
                                     .val(item.email);
                                 $('#updateUserModal .modal-body input[name="phone"]')
                                     .val(item.phone);
-                                // $('#updateUserModal .modal-body input[name="userRole"]')
-                                //     .autocomplete({
-                                //         minLength: 2,
-                                //         source: function(request, response) {
-                                //             response($.map(USER_ROLE, function(obj, key) {
-
-                                //                 if (obj.toUpperCase().indexOf(request.term.toUpperCase()) != -1) {
-                                //                     return {
-                                //                         label: obj, // Label for Display
-                                //                         value: key // Value
-                                //                     }
-                                //                 } else {
-                                //                     return null;
-                                //                 }
-                                //             }));
-                                //         },
-                                //         focus: function(event, ui) {
-                                //             event.preventDefault();
-                                //         },
-                                //         // Once a value in the drop down list is selected, do the following:
-                                //         select: function(event, ui) {
-                                //             event.preventDefault();
-                                //             // place the person.given_name value into the textfield called 'select_origin'...
-                                //             $('#updateUserModal .modal-body input[name="userRole"]').val(ui.item.label);
-                                //             // ... any other tasks (like setting Hidden Fields) go here...
-                                //             updateUserState.userRole = ui.item.value;
-                                //         },
-                                //         change: function(event, ui) {
-                                //             if (ui.item == null || ui.item == undefined) {
-                                //                 $('#updateUserModal .modal-body input[name="userRole"]')
-                                //                     .val("");
-                                //             }
-                                //         }
-                                //     }).val(USER_ROLE[item.userRole]);
-                                $('#updateUserModal .modal-body input[name="area"]')
-                                    .autocomplete({
-                                        minLength: 2,
-                                        source: function(request, response) {
-                                            $.ajax({
-                                                url: `${API_BASE_URL}/api/v1/area?per_page=100`,
-                                                method: 'GET',
-                                                dataType: 'json',
-                                                cors: true,
-                                                contentType: 'application/json',
-                                                secure: true,
-                                                headers: {
-                                                    'Access-Control-Allow-Origin': '*',
-
-                                                },
-                                                beforeSend: function(xhr) {
-                                                    xhr.setRequestHeader("access_token", localStorage.getItem('token'));
-                                                },
-                                                success: function(data) {
-                                                    response($.map(data.data.data, function(obj, key) {
-
-                                                        var areaName = obj.name.toUpperCase();
-
-                                                        if (areaName.indexOf(request.term.toUpperCase()) != -1) {
-                                                            return {
-                                                                label: obj.name, // Label for Display
-                                                                value: obj._id // Value
-                                                            }
-                                                        } else {
-                                                            return null;
-                                                        }
-                                                    }));
-                                                }
-                                            });
-                                        },
-                                        focus: function(event, ui) {
-                                            event.preventDefault();
-                                        },
-                                        // Once a value in the drop down list is selected, do the following:
-                                        select: function(event, ui) {
-                                            event.preventDefault();
-                                            // place the person.given_name value into the textfield called 'select_origin'...
-                                            $('#updateUserModal .modal-body input[name="area"]').val(ui.item.label);
-                                            // ... any other tasks (like setting Hidden Fields) go here...
-                                            updateUserState.area = ui.item.value;
-                                        },
-                                        change: function(event, ui) {
-                                            if (ui.item == null || ui.item == undefined) {
-                                                $('#updateUserModal .modal-body input[name="area"]')
-                                                    .val("");
-                                            }
-                                        }
-                                    }).val(item.connectedArea);
+                                $('#updateUserModal .modal-body select[name="userRole"]')
+                                    .val(item.userRole);
+                                $('#updateUserModal .modal-body select[name="area"]')
+                                    .val((item.connectedArea && item.connectedAreaId._id) || item.connectedArea);
+                                if (!$('#updateUserModal .modal-body select[name="area"] option:selected').length) {
+                                    $(`#updateUserModal .modal-body select[name="area"] option:contains("${item.connectedArea}")`).attr('selected', true);
+                                    // $(`#updateUserModal .modal-body select[name="area"]  option[value="${item.connectedArea}"]`).attr('selected', true);
+                                }
                             });
                     }
                     var $tr = $('<tr>').append(
@@ -449,7 +364,7 @@
                     }
                 });
             } else {
-                $('#userTable').replaceWith($('<div>').text('No Pending Approval Requests'));
+                $('#userTable').replaceWith($('<div>').text('No Users available'));
             }
         }
     }
@@ -457,6 +372,30 @@
     $(document).ready(function() {
         let userProfile;
         let state = {};
+        $.ajax({
+            type: "GET",
+            url: `${API_BASE_URL}/area?${$.param({
+                        per_page: 100,
+                    })}`,
+            dataType: 'json',
+            cors: true,
+            contentType: 'application/json',
+            secure: true,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+            },
+            success: function(response) {
+                $.each(response.data.data, function(i, area) {
+                    $(`<option value="${area._id}">${area.name}</option>`).appendTo($('#updateUserModal .modal-body select[name="area"]'))
+                });
+            },
+            error: function(err) {
+                logout();
+            },
+        });
         try {
             userProfile = JSON.parse(localStorage.getItem('userProfile'));
             if (userProfile.userRole === 4) {
@@ -464,7 +403,7 @@
                 // 1. Fetch the logged in area leader's connected area
                 $('#updateUserModal .modal-body input[name="area"]').attr('disabled', 'disabled');
                 $.each(USER_ROLE.slice(1, 4), function(i, item) {
-                    $(`<option value="${i}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
+                    $(`<option value="${USER_ROLE.findIndex(function(u){return u === item;})}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
                 });
                 $.ajax({
                     type: "GET",
@@ -485,7 +424,7 @@
                         const area = response.data &&
                             response.data.data &&
                             response.data.data[0] &&
-                            response.data.data[0].connectedArea;
+                            (response.data.data[0].connectedAreaId || response.data.data[0].connectedArea);
                         if (area) {
                             $.ajax({
                                 type: "GET",
@@ -521,7 +460,7 @@
                 // fetch all the pending users
                 var apiUrl;
                 $.each(USER_ROLE.slice(1), function(i, item) {
-                    $(`<option value="${i}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
+                    $(`<option value="${USER_ROLE.findIndex(function(u){return u === item;})}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
                 });
                 if (userProfile.userRole === 5) {
                     apiUrl = `${API_BASE_URL}/user?${$.param({
@@ -560,24 +499,17 @@
                     },
                 });
             } else {
-                $('#userTable').replaceWith($('<div>').text('No Pending Approval Requests'));
+                $('#userTable').replaceWith($('<div>').text('No Users available'));
             }
 
             $("#updateUserModal .modal-footer .btn-primary").click(function(e) {
                 const name = $('#updateUserModal .modal-body input[name="name"]').val();
                 const email = $('#updateUserModal .modal-body input[name="email"]').val();
                 const phone = $('#updateUserModal .modal-body input[name="phone"]').val();
+                const area = $('#updateUserModal .modal-body select[name="area"]').val();
+                // const userRole = $('#updateUserModal .modal-body select[name="userRole"]').val();
 
                 if (updateUserState.currentUserId) {
-                    const updatedUser = {};
-                    if (updateUserState.userRole) {
-                        updatedUser.userRole = updateUserState.userRole;
-                        updateUserState.userRole = null;
-                    }
-                    if (updateUserState.area) {
-                        updatedUser.connectedArea = updateUserState.area;
-                        updateUserState.area = null;
-                    }
                     $.ajax({
                         url: `${API_BASE_URL}/user/${updateUserState.currentUserId}`,
                         method: 'PUT',
@@ -586,7 +518,7 @@
                             name,
                             email,
                             phone,
-                            ...updatedUser
+                            area,
                         }),
                         cors: true,
                         contentType: 'application/json',
