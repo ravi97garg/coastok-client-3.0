@@ -49,63 +49,55 @@
         </div>
         <!-- page-body-wrapper ends -->
     </div>
-    <!-- container-scroller -->
-    <script src="../../assets/js/constants.js"></script>
-    <!-- plugins:js -->
-    <script src="../../vendors/base/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- inject:js -->
-    <script src="../../assets/js/off-canvas.js"></script>
-    <script src="../../assets/js/hoverable-collapse.js"></script>
-    <script src="../../assets/js/template.js"></script>
+</body>
+<!-- container-scroller -->
+<script src="../../assets/js/constants.js"></script>
+<!-- plugins:js -->
+<script src="../../vendors/base/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- inject:js -->
+<script src="../../assets/js/off-canvas.js"></script>
+<script src="../../assets/js/hoverable-collapse.js"></script>
+<script src="../../assets/js/template.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            const token = localStorage.getItem('token');
-            let userProfile = localStorage.getItem('userProfile');
-            try {
-                if (token) {
-                    // userProfile = JSON.parse(userProfile);
-                    window.location.href = window.location.origin + '/pages/dashboard';
-                }
-            } catch (err) {
-                // do nothing
-            }
+<script>
+    $(document).ready(function() {
+        const token = localStorage.getItem('token');
+        let userProfile = localStorage.getItem('userProfile');
 
-            $('#reset-password-form').submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: "POST",
-                    url: `${API_BASE_URL}/resetpassword`,
-                    dataType: 'json',
-                    cors: true,
-                    contentType: 'application/json',
-                    secure: true,
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                    },
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
-                    },
-                    data: JSON.stringify({
-                        "old_password": $('#reset-password-form input[name="old-password"]').val(),
-                        "password": $('#reset-password-form input[name="new-password"]').val()
-                    }),
-                    success: function(data) {
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('userProfile')
-                        window.close();
-                    },
-                    error: function(err) {
-                        alert('Error Response ' + JSON.stringify(err));
-                    },
-                });
-
+        $('#reset-password-form').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: `${API_BASE_URL}/resetpassword`,
+                dataType: 'json',
+                cors: true,
+                contentType: 'application/json',
+                secure: true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
+                },
+                data: JSON.stringify({
+                    "old_password": $('#reset-password-form input[name="old-password"]').val(),
+                    "password": $('#reset-password-form input[name="new-password"]').val()
+                }),
+                success: function(data) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userProfile')
+                    window.close();
+                },
+                error: function(err) {
+                    alert('Error Response ' + JSON.stringify(err));
+                },
             });
 
         });
-    </script>
-    <!-- endinject -->
-</body>
+
+    });
+</script>
+<!-- endinject -->
 
 </html>

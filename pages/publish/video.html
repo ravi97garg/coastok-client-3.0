@@ -55,7 +55,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                            <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
@@ -316,6 +316,10 @@
         if (data) {
             const videoContentTable = $('#videoContentTable');
             const tableBody = $('<tbody>');
+            if (updateVideos) {
+                $('#addVideoContent')
+                    .show();
+            }
             if (data.length) {
                 videoContentTable
                     .append($('<thead><tr><td>Name</td><td>Fest Type</td><td>Status</td><td>Actions</td></tr></thead>'));

@@ -55,7 +55,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                            <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
@@ -330,6 +330,10 @@
             });
             const audioContentTable = $('#audioContentTable');
             const tableBody = $('<tbody>');
+            if (updateAudios) {
+                $('#addAudioContent')
+                    .show();
+            }
             if (data.length) {
                 audioContentTable
                     .append($('<thead><tr><td>Name</td><td>Fest Type</td><td>Status</td><td>Actions</td></tr></thead>'));
@@ -355,8 +359,6 @@
                     }
                     var updateBtn = $('<span>');
                     if (updateAudios) {
-                        $('#addAudioContent')
-                            .show();
                         var updateBtn = $('<button>')
                             .text("Edit")
                             .attr('data-toggle', 'modal')

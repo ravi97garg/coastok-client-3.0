@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="../../../assets/css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="../../../assets/images/favicon.png" />
+    <link rel="stylesheet" href="../style.css" />
 </head>
 
 <body>
@@ -55,7 +56,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                            <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
@@ -139,6 +140,26 @@
                             <div class="card">
                                 <div class="card-body">
                                     <p class="card-title">My Area</p>
+                                    <h4>Area: <span id="areaName"></span></h4>
+                                    <h6>Area Leader: <span id="areaLeader"></span></h6>
+                                    <h6>Assistant Director: <span id="asstDirector"></span></h6>
+                                    <br/>
+                                    <div>Facilitators: </div>
+                                    <ul class="chips">
+                                        <!-- <li data-id="1231" class="chip">Krishna Das</li>
+                                        <li data-id="1232" class="chip">Krishna Das</li>
+                                        <li data-id="1233" class="chip">Krishna Das</li>
+                                        <li data-id="1234" class="chip">Krishna Das</li>
+                                        <li data-id="1235" class="chip">Krishna Das</li>
+                                        <li data-id="1236" class="chip">Krishna Das</li> -->
+                                    </ul>
+                                    <br/>
+                                    <br>
+                                    <div><strong>Add Facilitator</strong></div>
+                                    <div class="form-group">
+                                        <input placeholder="Start typing name of member you want to add" class="form-control" id="facilitators" size="50">
+                                    </div>
+                                    <button id="addFacilitator" class="btn btn-primary">Add as Facilitator</button>
                                 </div>
                             </div>
                         </div>
@@ -168,8 +189,105 @@
 <script src="../../../assets/js/jquery.dataTables.js"></script>
 <script src="../../../assets/js/dataTables.bootstrap4.js"></script> -->
 <script src="../../../assets/js/page-access.js"></script>
+<script src="../../../assets/js/jquery-ui.js"></script>
+
 
 <script>
+    var facilitatorState = {};
+
+    function split(val) {
+        return val.split(/,\s*/);
+    }
+
+    function extractLast(term) {
+        return split(term).pop();
+    }
+
+    $("#facilitators")
+        .autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                if (request.term.length > 2) {
+                    $.ajax({
+                        url: `${API_BASE_URL}/search?userRole=1,2,3,4,5&q=${request.term}`,
+                        method: 'GET',
+                        dataType: 'json',
+                        cors: true,
+                        contentType: 'application/json',
+                        secure: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                        },
+                        success: function(data) {
+                            response($.map(data.data.data, function(obj, key) {
+                                var facilitator = obj.name.toUpperCase();
+                                if (facilitator.indexOf(request.term.toUpperCase()) != -1) {
+                                    return {
+                                        label: obj.name, // Label for Display
+                                        value: obj._id // Value
+                                    }
+                                } else {
+                                    return null;
+                                }
+                            }));
+                        }
+                    });
+                }
+            },
+            focus: function(event, ui) {
+                event.preventDefault();
+            },
+            // Once a value in the drop down list is selected, do the following:
+            select: function(event, ui) {
+                event.preventDefault();
+                // place the person.given_name value into the textfield called 'select_origin'...
+                $('#facilitators').val(ui.item.label);
+                // ... any other tasks (like setting Hidden Fields) go here...
+                facilitatorState.facilitator = ui.item.value;
+            },
+            change: function(event, ui) {
+                if (ui.item == null || ui.item == undefined) {
+                    $('#facilitators')
+                        .val("");
+                }
+            }
+        }).val("");
+
+    $('#addFacilitator').click(function() {
+        if (facilitatorState.facilitator && facilitatorState.areaId) {
+            // add the facilitator
+            facilitatorState.faciList.push(facilitatorState.facilitator);
+            $.ajax({
+                type: "PUT",
+                url: `${API_BASE_URL}/area/${facilitatorState.areaId}`,
+                dataType: 'json',
+                cors: true,
+                contentType: 'application/json',
+                secure: true,
+                processData: false,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+                data: JSON.stringify({
+                    facilitators: facilitatorState.faciList,
+                }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                },
+                success: function(response) {
+                    window.location.reload();
+                },
+                error: function(err) {
+                    alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));;
+                },
+            });
+            $('#facilitators').val('');
+        }
+    });
+
     $(document).ready(function() {
         let userProfile;
         try {
@@ -193,17 +311,47 @@
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
                     },
                     success: function(response) {
-                        $("<div/>")
-                            .text(`Area Leader: ${response.data && response.data.data[0] && response.data.data[0].areaLeader && response.data.data[0].areaLeader.name}`)
-                            .appendTo($(".main-panel .card .card-body"));
-                        $("<div/>")
-                            .text(`Assistant Director: ${(response.data && response.data.data[0] && response.data.data[0].assistantDirector && response.data.data[0].assistantDirector.name) || 'Not Available'}`)
-                            .appendTo($(".main-panel .card .card-body"));
-                        $("<div/>").text("Facilitators").appendTo($(".main-panel .card .card-body"));
+                        facilitatorState.areaId = response.data && response.data.data[0] && response.data.data[0]._id;
+                        $("#areaName").text(response.data && response.data.data[0] && response.data.data[0].name)
+                        $("#areaLeader").text(response.data && response.data.data[0] && response.data.data[0].areaLeader && response.data.data[0].areaLeader.name)
+                        $("#asstDirector").text((response.data && response.data.data[0] && response.data.data[0].assistantDirector && response.data.data[0].assistantDirector.name) || 'Not Available');
+                        // $("<div/>").text("Facilitators").appendTo($(".main-panel .card .card-body"));
+                        facilitatorState.faciList = (response.data && response.data.data[0] && response.data.data[0].facilitators && response.data.data[0].facilitators.map(e => e._id)) || [];
                         $.each(response.data && response.data.data[0] && response.data.data[0].facilitators, function(i, item) {
-                            $("<div/>")
+                            $("<li/>")
+                                .addClass('chip')
+                                .attr('title', 'Remove facilitator')
                                 .text(item.name)
-                                .appendTo($(".main-panel .card .card-body"));
+                                .appendTo($(".main-panel .card .card-body ul.chips"))
+                                .click(function() {
+                                    //delete the facilitator
+                                    // facilitatorState.faciList.remove(item._id);
+                                    // console.log(facilitatorState.faciList);
+                                    $.ajax({
+                                        type: "PUT",
+                                        url: `${API_BASE_URL}/area/${facilitatorState.areaId}`,
+                                        dataType: 'json',
+                                        cors: true,
+                                        contentType: 'application/json',
+                                        secure: true,
+                                        processData: false,
+                                        headers: {
+                                            'Access-Control-Allow-Origin': '*',
+                                        },
+                                        data: JSON.stringify({
+                                            facilitators: facilitatorState.faciList.filter(f => f !== item._id),
+                                        }),
+                                        beforeSend: function(xhr) {
+                                            xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                                        },
+                                        success: function(response) {
+                                            window.location.reload();
+                                        },
+                                        error: function(err) {
+                                            alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));;
+                                        },
+                                    });
+                                });
                         })
                     },
                     error: function(err) {

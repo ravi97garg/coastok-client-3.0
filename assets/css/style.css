@@ -23737,3 +23737,11 @@ input[type="checkbox"] {
 .nav-item {
     display: none;
 }
+
+.sub-menu .nav-item {
+    display: block;
+}
+
+.ui-autocomplete {
+    z-index: 1051;
+}

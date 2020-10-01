@@ -55,7 +55,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                            <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
@@ -259,7 +259,7 @@
                                     .append(
                                         $(`<div class="member-modal-view">
                                     <div class="chips">
-                                        <div>${item.connectedArea || 'unknown connected Area'}</div>
+                                        <div>${(item.connectedAreaId && item.connectedAreaId.name) || 'unknown connected Area'}</div>
                                         <div>${GENDER[item.gender] || 'unknown gender'}</div>
                                         <div>${MARITAL_STATUS[item.maritalStatus] || 'unknown marital status'}</div>
                                         <div>${STATUS[item.status]}</div>
@@ -388,7 +388,7 @@
                         const area = response.data &&
                             response.data.data &&
                             response.data.data[0] &&
-                            (response.data.data[0].connectedAreaId || response.data.data[0].connectedArea);
+                            (response.data.data[0].connectedAreaId && response.data.data[0].connectedAreaId._id);
                         if (area) {
                             $.ajax({
                                 type: "GET",

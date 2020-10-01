@@ -57,7 +57,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
+                            <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
                             <a class="dropdown-item" id="logoutBtn">
@@ -282,7 +282,7 @@
                                     .append(
                                         $(`<div class="member-modal-view">
                                     <div class="chips">
-                                        <div>${item.connectedArea || 'unknown connected Area'}</div>
+                                        <div>${(item.connectedAreaId && item.connectedAreaId.name) || 'unknown connected Area'}</div>
                                         <div>${GENDER[item.gender] || 'unknown gender'}</div>
                                         <div>${MARITAL_STATUS[item.maritalStatus] || 'unknown marital status'}</div>
                                         <div>${STATUS[item.status]}</div>
@@ -336,11 +336,11 @@
                                 $('#updateUserModal .modal-body select[name="userRole"]')
                                     .val(item.userRole);
                                 $('#updateUserModal .modal-body select[name="area"]')
-                                    .val((item.connectedArea && item.connectedAreaId._id) || item.connectedArea);
-                                if (!$('#updateUserModal .modal-body select[name="area"] option:selected').length) {
-                                    $(`#updateUserModal .modal-body select[name="area"] option:contains("${item.connectedArea}")`).attr('selected', true);
-                                    // $(`#updateUserModal .modal-body select[name="area"]  option[value="${item.connectedArea}"]`).attr('selected', true);
-                                }
+                                    .val((item.connectedAreaId && item.connectedAreaId._id) || item.connectedArea);
+                                // if (!$('#updateUserModal .modal-body select[name="area"] option:selected').length) {
+                                //     $(`#updateUserModal .modal-body select[name="area"] option:contains("${item.connectedArea}")`).attr('selected', true);
+                                //     // $(`#updateUserModal .modal-body select[name="area"]  option[value="${item.connectedArea}"]`).attr('selected', true);
+                                // }
                             });
                     }
                     var $tr = $('<tr>').append(
@@ -424,7 +424,7 @@
                         const area = response.data &&
                             response.data.data &&
                             response.data.data[0] &&
-                            (response.data.data[0].connectedAreaId || response.data.data[0].connectedArea);
+                            ((response.data.data[0].connectedAreaId && response.data.data[0].connectedAreaId._id) || response.data.data[0].connectedArea);
                         if (area) {
                             $.ajax({
                                 type: "GET",
@@ -518,7 +518,7 @@
                             name,
                             email,
                             phone,
-                            area,
+                            connectedAreaId: area,
                         }),
                         cors: true,
                         contentType: 'application/json',
