@@ -60,6 +60,10 @@ const STATUS = [
 ];
 
 function safeLoadMedia(mediaUrl) {
+    //temporary fix
+    if (mediaUrl.includes('https://backend-api.coastok.com')) {
+        return mediaUrl.replace('https://backend-api.coastok.com', 'http://148.72.212.41:3030')
+    }
     if (window.location.host === 'localhost') {
         // localhost
         return mediaUrl

@@ -259,15 +259,24 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4 col-lg-4 form-group">
-                            <select class="form-control form-control-md" id="area">
+                            <select class="form-control form-control-md" id="areaSelect">
                               <option value="all">ALL</option>
                             </select>
                         </div>
-                        <div id="from" class="col-md-4 col-lg-4 form-group">
-                            <input class="form-control" placeholder="Start Date (YYYY-MM-DD)" />
+                        <div class="col-md-4 col-lg-4 form-group">
+                            <input id="from" class="form-control" placeholder="Start Date (YYYY-MM-DD)" />
                         </div>
-                        <div id="to" class="col-md-4 col-lg-4">
-                            <input class="form-control" placeholder="End Date (YYYY-MM-DD)" />
+                        <div class="col-md-4 col-lg-4">
+                            <input id="to" class="form-control" placeholder="End Date (YYYY-MM-DD)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4 form-group">
+                            <input type="checkbox" name="no-date-bound">
+                            <label for="no-date-bound">No Date Bound</label>
+                        </div>
+                        <div class="col-md-4 col-lg-4 form-group">
+                            <button id="submit-data" class="btn btn-primary">Get Stats</button>
                         </div>
                     </div>
                     <div class="row">
@@ -396,13 +405,29 @@
     <!-- <script src="../../assets/js/data-table.js"></script>
     <script src="../../assets/js/jquery.dataTables.js"></script> -->
     <!-- <script src="../../assets/js/dataTables.bootstrap4.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
     <script src="../../assets/js/jquery-ui.js"></script>
     <script src="../../assets/js/page-access.js"></script>
     <script>
-        $(function() {
+        function getQueryStringValue(key) {
+            return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+        }
+
+        function getStats(area, startDate, endDate) {
+            const query = {};
+            if (!(!area || area === 'all')) {
+                query.areaId = area;
+            }
+            if (startDate) {
+                query.startDate = startDate;
+            }
+            if (endDate) {
+                query.endDate = endDate;
+            }
             $.ajax({
                 type: "GET",
-                url: `${API_BASE_URL}/summary`,
+                url: `${API_BASE_URL}/summary?${$.param(query)}`,
                 dataType: 'json',
                 cors: true,
                 contentType: 'application/json',
@@ -419,17 +444,113 @@
                     $('#coastokMemberCount h5').text(data.coastokMemberCount);
                     $('#frontLinerCount h5').text(data.frontLinerCount);
                     $('#facilitatorCount h5').text(data.facilitatorCount);
-                    $('#areaLeaderCount h5').text(data.areaLeaderCount);
-                    $('#assistantDirectorCount h5').text(data.assistantDirectorCount);
-                    $('#areaCount h5').text(data.areaCount);
                     $('#totalQuestionCount h5').text(data.totalQuestionCount);
                     $('#answeredQuestionCount h5').text(data.answeredQuestionCount);
                     $('#unansweredQuestionCount h5').text(data.unansweredQuestionCount);
+                    if (query.areaId) {
+                        $('#areaLeaderCount').attr('style', 'display: none !important;');
+                        $('#assistantDirectorCount').attr('style', 'display: none !important;');
+                        $('#areaCount').attr('style', 'display: none !important;');
+                    } else {
+                        $('#areaLeaderCount h5').attr('style', 'display: flex;').text(data.areaLeaderCount);
+                        $('#assistantDirectorCount h5').attr('style', 'display: flex;').text(data.assistantDirectorCount);
+                        $('#areaCount h5').attr('style', 'display: flex;').text(data.areaCount);
+                    }
                 },
                 error: function(err) {
                     alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
                 },
             });
+        }
+
+        $(function() {
+            const userProfile = JSON.parse(localStorage.getItem("userProfile"));
+            const userRole = getCurrentUserRole();
+            const area = getQueryStringValue('area');
+            getStats(area);
+            if (userRole === 6 || userRole === 7) {
+                $.ajax({
+                    type: "GET",
+                    url: `${API_BASE_URL}/area?per_page=100`,
+                    dataType: 'json',
+                    cors: true,
+                    contentType: 'application/json',
+                    secure: true,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                    },
+                    success: function(response) {
+                        const data = response.data.data;
+                        $.each(data, function(i, item) {
+                            $('<option/>')
+                                .val(item._id)
+                                .text(item.name)
+                                .appendTo($('#areaSelect'))
+                        });
+                        $('#areaSelect').val(data.map(e => e._id).includes(area) ? area : 'all');
+                    },
+                    error: function(err) {
+                        alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+                    },
+                });
+            } else {
+                $('#areaSelect').hide();
+            }
+
+            $('#submit-data').click(function() {
+                const areaId = $('#areaSelect').val();
+                const from = $('#from').val();
+                const to = $('#to').val();
+                console.log(areaId, from, to);
+                getStats(areaId, from, to);
+            })
+
+            $('.main-panel input[name="no-date-bound"]').change(function() {
+                if (this.checked) {
+                    $('#from').val("").attr("disabled", "true");
+                    $('#to').val("").attr("disabled", "true");
+                } else {
+                    $('#from').removeAttr("disabled");
+                    $('#to').removeAttr("disabled");
+                }
+            })
+
+            var dateFormat = "yy-mm-dd",
+                from = $("#from")
+                .datepicker({
+                    defaultDate: "+1w",
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    dateFormat: 'yy-mm-dd'
+                })
+                .on("change", function() {
+                    console.log(to.val());
+                    to.datepicker("option", "minDate", getDate(this));
+                }),
+                to = $("#to").datepicker({
+                    defaultDate: "+1w",
+                    changeMonth: true,
+                    numberOfMonths: 1,
+                    dateFormat: 'yy-mm-dd'
+                })
+                .on("change", function() {
+                    console.log(from.val());
+                    from.datepicker("option", "maxDate", getDate(this));
+                });
+
+            function getDate(element) {
+                var date;
+                try {
+                    date = $.datepicker.parseDate(dateFormat, element.value);
+                } catch (error) {
+                    date = null;
+                }
+
+                return date;
+            }
         })
     </script>
 </body>
