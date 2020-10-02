@@ -17,6 +17,33 @@ li.chip {
     cursor: pointer;
 }
 
+li.chip:after {
+    content: "\00d7";
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 4px;
+    font-size: 16px;
+}
+
 li.chip:hover {
     background-color: red;
+}
+
+li.chip2 {
+    display: inline-block;
+    padding: 0px 6px;
+    color: white;
+    background: black;
+    margin-right: 4px;
+    font-size: 12px;
+}
+
+.area-container .header {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.area-container .code {
+    text-transform: uppercase;
 }

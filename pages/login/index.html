@@ -118,7 +118,7 @@
                             // }
 
                             localStorage.setItem('token', (data && data.result && data.result.token) || (data && data.data && data.data[0] && data.data[0].token));
-                            localStorage.setItem('userProfile', JSON.stringify(data && data.result && data.result.data))
+                            localStorage.setItem('userProfile', JSON.stringify(data && data.result && data.result.data));
                             window.location.href = window.location.origin + '/pages/dashboard';
                         } else {
                             alert(data);

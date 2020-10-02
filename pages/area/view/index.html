@@ -55,7 +55,7 @@
                                 <div class="nav-profile-designation"></div>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" id="profileDropdownList" aria-labelledby="profileDropdown">
                             <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
@@ -292,7 +292,7 @@
         let userProfile;
         try {
             userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            if (userProfile.userRole === 4) {
+            if (getCurrentUserRole() === 4) {
                 // if the logged in user is an Area leader or General Secretary
                 // 1. Fetch the logged in area leader's connected area
                 $.ajax({
@@ -326,7 +326,6 @@
                                 .click(function() {
                                     //delete the facilitator
                                     // facilitatorState.faciList.remove(item._id);
-                                    // console.log(facilitatorState.faciList);
                                     $.ajax({
                                         type: "PUT",
                                         url: `${API_BASE_URL}/area/${facilitatorState.areaId}`,

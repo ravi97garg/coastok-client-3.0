@@ -56,7 +56,7 @@
                                 <div class="nav-profile-designation"></div>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" id="profileDropdownList" aria-labelledby="profileDropdown">
                             <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
@@ -266,7 +266,7 @@
             const tableBody = $('<tbody>');
             if (data.length) {
                 userTable
-                    .append($('<thead><tr><td>Name</td><td>Email</td><td>Role</td><td>Actions</td></tr></thead>'));
+                    .append($('<thead><tr><td>Name</td><td>Email</td><td>Contact</td><td>Facilitator</td><td>Rounds</td><td>Actions</td></tr></thead>'));
 
                 $.each(data, function(i, item) {
                     if (viewDetails) {
@@ -346,7 +346,9 @@
                     var $tr = $('<tr>').append(
                         $('<td>').text(item.name),
                         $('<td>').text(item.email),
-                        $('<td>').text(USER_ROLE[item.userRole]),
+                        $('<td>').text(item.phone),
+                        $('<td>').text((item.facilitator && item.facilitator.name) || 'NA'),
+                        $('<td>').text(item.chantingRounds),
                         $('<td>').append(detailsBtn).append(updateBtn)
                     ); //.appendTo('#records_table');
                     tableBody.append($tr);
@@ -371,6 +373,7 @@
 
     $(document).ready(function() {
         let userProfile;
+        let userRole;
         let state = {};
         $.ajax({
             type: "GET",
@@ -398,7 +401,8 @@
         });
         try {
             userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            if (userProfile.userRole === 4) {
+            userRole = getCurrentUserRole();
+            if (userRole === 4) {
                 // if the logged in user is an Area leader or General Secretary
                 // 1. Fetch the logged in area leader's connected area
                 $('#updateUserModal .modal-body input[name="area"]').attr('disabled', 'disabled');
@@ -455,14 +459,14 @@
                         logout();
                     },
                 });
-            } else if ([5, 6, 7].includes(userProfile.userRole)) {
+            } else if ([5, 6, 7].includes(userRole)) {
                 // if the logged in user is general secretary
                 // fetch all the pending users
                 var apiUrl;
                 $.each(USER_ROLE.slice(1), function(i, item) {
                     $(`<option value="${USER_ROLE.findIndex(function(u){return u === item;})}">${item}</option>`).appendTo($('#updateUserModal .modal-body select[name="userRole"]'))
                 });
-                if (userProfile.userRole === 5) {
+                if (userRole === 5) {
                     apiUrl = `${API_BASE_URL}/user?${$.param({
                     assistantDirector: userProfile._id,
                     per_page: 1000
@@ -486,9 +490,9 @@
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
                     },
                     success: function(response) {
-                        if (userProfile.userRole === 5) {
+                        if (userRole === 5) {
                             popuateData(response.data.data, true, false);
-                        } else if (userProfile.userRole === 6) {
+                        } else if (userRole === 6) {
                             popuateData(response.data.data, true, true);
                         } else {
                             popuateData(response.data.data, true, false);

@@ -56,7 +56,7 @@
                                 <div class="nav-profile-designation"></div>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" id="profileDropdownList" aria-labelledby="profileDropdown">
                             <a href="../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
@@ -143,7 +143,8 @@
                                     <div class="row">
                                         <div class="col-md-12 stretch-card" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
                                             <span class="card-title" style="margin: 0;">Area Details</span>
-                                            <div class="form-group" style="margin: 0; min-width: 200px;">
+                                            <div class="form-group" style="margin: 0; min-width: 200px; display: flex; align-items: center;">
+                                                <span style="font-size: 12px;">Assistant Director</span>
                                                 <select class="form-control form-control-sm" id="selectAsstDirector">
                                                     <option value="all">ALL</option>
                                                 </select>
@@ -330,14 +331,23 @@
                         .attr('title', "View Details")
                         .addClass('btn btn-primary')
                         .click(function() {
-                            $('#viewAreaModal .modal-body').empty();
-                            $.each(area, function(key, value) {
-                                $('#viewAreaModal .modal-body')
-                                    .append(
-                                        $('<div>' + key.toUpperCase() + ' : ' + (typeof value === 'object' ? JSON.stringify(value) : value) + '</div>')
-                                        .addClass('text-ellipsis')
-                                    );
-                            });
+                            $('#viewAreaModal .modal-body').empty()
+                                .append($(`
+                            <div class="area-container">
+                                <div class="header">
+                                    <h3>${area.name}</h3>
+                                    <h5>${area.code}</h5>
+                                </div>
+                                <br/>
+                                <h6>Area Leader: ${area.areaLeader? area.areaLeader.name : 'NA'}</h6>
+                                <h6>Assistant Director: ${area.assistantDirector? area.assistantDirector.name : 'NA'}</h6>
+                                <h6>Facilitators: ${(!area.facilitators || !area.facilitators.length) ? 'No Facilitators available' : ''}</h6>
+                                <ul class="chips">
+                                    ${(area.facilitators || []).map(e=>'<li class="chip2">'+e.name+'</li>')}
+                                </ul>
+                            </div>
+                            
+                            `))
                         });
                 }
                 var updateBtn = $('<span>');
@@ -351,8 +361,8 @@
                         .addClass('btn btn-primary')
                         .css("margin-left", "16px")
                         .click(function() {
-                            editAreaState.areaLeader = null,
-                                editAreaState.assistantDirector = null,
+                            editAreaState.areaLeader = (area.areaLeader && area.areaLeader._id) || null,
+                                editAreaState.assistantDirector = (area.assistantDirector && area.assistantDirector._id) || null,
                                 editAreaState.currentAreaId = area._id;
                             // setAreaLeaderCandidates(area._id);
                             // $('#editAreaModal .modal-body').empty();
@@ -409,6 +419,7 @@
                                         if (ui.item == null || ui.item == undefined) {
                                             $('#editAreaModal .modal-body input[name="areaLeader"]')
                                                 .val("");
+                                            editAreaState.areaLeader = null;
                                         }
                                     }
                                 }).val(area.areaLeader && area.areaLeader.name);
@@ -461,6 +472,7 @@
                                         if (ui.item == null || ui.item == undefined) {
                                             $('#editAreaModal .modal-body input[name="asstDirector"]')
                                                 .val("");
+                                            editAreaState.assistantDirector = null;
                                         }
                                     }
                                 }).val(area.assistantDirector && area.assistantDirector.name);
@@ -563,12 +575,20 @@
                         alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
                     },
                 });
+            } else {
+                $('#selectAsstDirector').hide();
             }
 
             $('#selectAsstDirector').on('change', function() {
-                window.location.href = window.location.href.split(window.location.search)[0] + '?' + $.param({
-                    asstDirector: this.value,
-                });
+                if (window.location.search) {
+                    window.location.href = window.location.href.split(window.location.search)[0] + '?' + $.param({
+                        asstDirector: this.value,
+                    });
+                } else {
+                    window.location.href = window.location.href + '?' + $.param({
+                        asstDirector: this.value,
+                    });
+                }
             });
 
             $("#editAreaModal .modal-footer .btn-primary").click(function(e) {

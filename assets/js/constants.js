@@ -71,30 +71,35 @@ function getCurrentUserRole() {
     const userProfile = localStorage.getItem('userProfile');
     if (userProfile) {
         const parsedProfile = JSON.parse(userProfile);
-        const roles = parsedProfile.roles;
-        const userRole = parsedProfile.userRole;
-        const email = parsedProfile.email;
-        if (roles) {
-            if (email && email.includes('area-leader') && roles.includes(4)) {
-                return 4;
-            } else if (email && email.includes('asst-director') && roles.includes(5)) {
-                return 5;
-            } else if (email && email.includes('admin') && roles.includes(6)) {
-                return 6;
-            } else {
-                return userRole;
-            }
-        } else {
-            if (email && email.includes('area-leader')) {
-                return 4;
-            } else if (email && email.includes('asst-director')) {
-                return 5;
-            } else if (email && email.includes('admin')) {
-                return 6;
-            } else {
-                return userRole;
-            }
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            return +currentUser;
         }
+        return userProfile.userRole;
+        // const roles = parsedProfile.roles;
+        // const userRole = parsedProfile.userRole;
+        // const email = parsedProfile.email;
+        // if (roles) {
+        //     if (email && email.includes('area-leader') && roles.includes(4)) {
+        //         return 4;
+        //     } else if (email && email.includes('asst-director') && roles.includes(5)) {
+        //         return 5;
+        //     } else if (email && email.includes('admin') && roles.includes(6)) {
+        //         return 6;
+        //     } else {
+        //         return userRole;
+        //     }
+        // } else {
+        //     if (email && email.includes('area-leader')) {
+        //         return 4;
+        //     } else if (email && email.includes('asst-director')) {
+        //         return 5;
+        //     } else if (email && email.includes('admin')) {
+        //         return 6;
+        //     } else {
+        //         return userRole;
+        //     }
+        // }
     }
     return 1;
 }

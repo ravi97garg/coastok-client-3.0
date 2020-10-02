@@ -54,7 +54,7 @@
                                 <div class="nav-profile-designation"></div>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" id="profileDropdownList" aria-labelledby="profileDropdown">
                             <a href="../../../pages/resetPassword/" target="_blank" class="dropdown-item">
                                 <i class="mdi mdi-settings text-primary"></i> Reset Password
                             </a>
@@ -393,9 +393,11 @@
 
     $(document).ready(function() {
         let userProfile;
+        let userRole;
         let state = {};
         try {
             userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            userRole = getCurrentUserRole();
             $.ajax({
                 type: "GET",
                 url: `${API_BASE_URL}/static?${$.param({
@@ -414,9 +416,9 @@
                     xhr.setRequestHeader("access_token", localStorage.getItem('token'));
                 },
                 success: function(response) {
-                    if (userProfile.userRole === 5) {
+                    if (userRole === 5) {
                         populateData(response.data.data, true, false);
-                    } else if (userProfile.userRole === 6) {
+                    } else if (userRole === 6) {
                         populateData(response.data.data, true, true);
                     } else {
                         populateData(response.data.data, true, false);

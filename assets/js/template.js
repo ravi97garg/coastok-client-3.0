@@ -77,6 +77,8 @@
                 success: function(response) {
                     localStorage.removeItem('token');
                     localStorage.removeItem('userProfile');
+                    localStorage.removeItem('both');
+                    localStorage.removeItem('currentUser');
                     if (!(window.location.href === `${window.location.origin}/pages/login/index.html` || window.location.href === window.location.origin)) {
                         window.location.href = window.location.origin + '/pages/login/index.html';
                     }
@@ -85,6 +87,8 @@
                     // alert('Unable to logout. Please try again after some time.');
                     localStorage.removeItem('token');
                     localStorage.removeItem('userProfile');
+                    localStorage.removeItem('both');
+                    localStorage.removeItem('currentUser');
                     if (!(window.location.href === `${window.location.origin}/pages/login/index.html` || window.location.href === window.location.origin)) {
                         window.location.href = window.location.origin + '/pages/login/index.html';
                     }
@@ -96,6 +100,74 @@
             if (!(window.location.href === `${window.location.origin}/pages/login/index.html` || window.location.href === window.location.origin)) {
                 window.location.href = window.location.origin + '/pages/login/index.html';
             }
+        }
+    }
+
+    function refreshRoles() {
+        try {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            $.ajax({
+                type: "GET",
+                url: `${API_BASE_URL}/area?${$.param({
+                    areaLeader: userProfile._id
+                    })}`,
+                dataType: 'json',
+                cors: true,
+                contentType: 'application/json',
+                secure: true,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                },
+                success: function(response1) {
+                    $.ajax({
+                        type: "GET",
+                        url: `${API_BASE_URL}/area?${$.param({
+                            assistantDirector: userProfile._id
+                            })}`,
+                        dataType: 'json',
+                        cors: true,
+                        contentType: 'application/json',
+                        secure: true,
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                        },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("access_token", localStorage.getItem('token'));
+                        },
+                        success: function(response2) {
+                            if (response1.data.total_results && response2.data.total_results) {
+                                localStorage.setItem('both', 'true');
+                                localStorage.setItem('currentUser', '4');
+                                $('#profileDropdown .nav-profile-designation').text(USER_ROLE[4]);
+                                $('<a/>')
+                                    .addClass('dropdown-item')
+                                    .text('Login as Assistant Director')
+                                    .attr('id', 'account-switch')
+                                    .appendTo($('#profileDropdownList'))
+                                    .click(function() {
+                                        localStorage.setItem('currentUser', '5');
+                                        window.location.reload();
+                                    })
+                            } else {
+                                localStorage.setItem('both', 'false');
+                                window.location.reload();
+                            }
+                        },
+                        error: function(err) {
+                            alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+                        },
+                    });
+                },
+                error: function(err) {
+                    alert(JSON.stringify(err && err.responseJSON && err.responseJSON.data && err.responseJSON.data[0]));
+                },
+            });
+        } catch (err) {
+            alert('Token Corrupted. Login again.');
+            logout();
         }
     }
 
@@ -119,7 +191,6 @@
                     secure: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
-
                     },
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("access_token", localStorage.getItem('token'));
@@ -129,15 +200,43 @@
                             const userProfile = response.data[0];
                             // userProfile = JSON.parse(userProfile);
                             localStorage.setItem('userProfile', JSON.stringify(userProfile));
-                            localStorage.setItem('username', userProfile.name);
                             if (userProfile.imageUrl) {
                                 $('#profileDropdown > img').attr("src", userProfile.imageUrl);
                             }
                             if (userProfile.name) {
                                 $('#profileDropdown .nav-profile-name').text(userProfile.name);
                             }
-                            if (userProfile.userRole) {
-                                $('#profileDropdown .nav-profile-designation').text(USER_ROLE[userProfile.userRole]);
+                            let userRole = getCurrentUserRole();
+                            if (userRole) {
+                                if ((userRole === 4 || userRole === 5) && (!localStorage.getItem('both'))) {
+                                    refreshRoles();
+                                } else if (localStorage.getItem('both') === 'true') {
+                                    let up = localStorage.getItem('currentUser');
+                                    $('<a/>')
+                                        .addClass('dropdown-item')
+                                        .text(up === '4' ? 'Login as Assistant Director' : 'Login as Area Leader')
+                                        .attr('id', 'account-switch')
+                                        .appendTo($('#profileDropdownList'))
+                                        .click(function() {
+                                            if (up === '4') {
+                                                up = '5';
+                                            } else {
+                                                up = '4';
+                                            }
+                                            localStorage.setItem('currentUser', up);
+                                            window.location.reload();
+                                        })
+                                }
+                                if (userRole === 4 || userRole === 5) {
+                                    $('<a/>')
+                                        .addClass('dropdown-item')
+                                        .text("Refresh Roles")
+                                        .appendTo($('#profileDropdownList'))
+                                        .click(function() {
+                                            refreshRoles();
+                                        })
+                                }
+                                $('#profileDropdown .nav-profile-designation').text(USER_ROLE[userRole]);
                             }
                         }
                     },
