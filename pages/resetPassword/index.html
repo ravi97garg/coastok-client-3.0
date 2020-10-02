@@ -13,7 +13,7 @@
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css" />
     <!-- endinject -->
     <link rel="shortcut icon" href="../../assets/images/favicon.png" />
 </head>
@@ -78,7 +78,7 @@
                     'Access-Control-Allow-Origin': '*',
                 },
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", localStorage.getItem("token"));
+                    xhr.setRequestHeader("access_token", localStorage.getItem("token"));
                 },
                 data: JSON.stringify({
                     "old_password": $('#reset-password-form input[name="old-password"]').val(),

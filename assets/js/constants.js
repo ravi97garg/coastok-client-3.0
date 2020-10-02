@@ -75,7 +75,7 @@ function getCurrentUserRole() {
         if (currentUser) {
             return +currentUser;
         }
-        return userProfile.userRole;
+        return parsedProfile.userRole;
         // const roles = parsedProfile.roles;
         // const userRole = parsedProfile.userRole;
         // const email = parsedProfile.email;
