@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-                <ul class="navbar-nav mr-lg-4 w-100">
+                <ul class="navbar-nav mr-lg-4 w-100" style="visibility: hidden;">
                     <li class="nav-item nav-search d-none d-lg-block w-100">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -156,6 +156,7 @@
                                         <table id="areaTable" class="table">
                                             <thead>
                                                 <tr>
+                                                    <th>Code</th>
                                                     <th>Area Name</th>
                                                     <th>Area Leader</th>
                                                     <th>Assistant Director</th>
@@ -479,6 +480,7 @@
                         });
                 }
                 var $tr = $('<tr>').append(
+                    $('<td>').text(area.code),
                     $('<td>').text(area.name),
                     $('<td>').text((area.areaLeader && area.areaLeader.name) || 'NA'),
                     $('<td>').text((area.assistantDirector && area.assistantDirector.name) || 'NA'),
@@ -593,14 +595,15 @@
 
             $("#editAreaModal .modal-footer .btn-primary").click(function(e) {
                 const areaName = $('#editAreaModal .modal-body input[name="areaName"]').val();
+                const areaCode = $('#editAreaModal .modal-body input[name="areaCode"]').val();
                 if (editAreaState.currentAreaId) {
-                    console.log(editAreaState);
                     $.ajax({
                         url: `${API_BASE_URL}/area/${editAreaState.currentAreaId}`,
                         method: 'PUT',
                         dataType: 'json',
                         data: JSON.stringify({
                             name: areaName,
+                            code: areaCode,
                             areaLeader: editAreaState.areaLeader,
                             assistantDirector: editAreaState.assistantDirector,
                         }),

@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-                <ul class="navbar-nav mr-lg-4 w-100">
+                <ul class="navbar-nav mr-lg-4 w-100" style="visibility: hidden;">
                     <li class="nav-item nav-search d-none d-lg-block w-100">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -440,7 +440,7 @@
                 },
                 success: function(response) {
                     const data = response.data;
-                    $('#nonCoastokMemberCount h5').text(data.nonCoastokMemberCount);
+                    $('#nonCoastokMemberCount h5').text(data.nonCoastokMemberCount + data.coastokMemberCount);
                     $('#coastokMemberCount h5').text(data.coastokMemberCount);
                     $('#frontLinerCount h5').text(data.frontLinerCount);
                     $('#facilitatorCount h5').text(data.facilitatorCount);
